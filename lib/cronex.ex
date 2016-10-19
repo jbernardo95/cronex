@@ -5,8 +5,8 @@ defmodule Cronex do
     import Supervisor.Spec, warn: false
 
     children = [
-      worker(Cronex.Master, [nil, [name: :cronex_master]]),
-      supervisor(Cronex.Supervisor, [nil, [name: :cronex_supervisor]])
+      worker(Cronex.Master, []),
+      supervisor(Cronex.Supervisor, [])
     ]
 
     opts = [strategy: :one_for_one, name: Cronex.Supervisor]
