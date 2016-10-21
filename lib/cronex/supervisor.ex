@@ -1,6 +1,6 @@
 defmodule Cronex.Supervisor do
   @moduledoc """
-  This module supervises the slave processes.
+  This module supervises the job's processes.
   """
   use Supervisor
 
@@ -18,8 +18,8 @@ defmodule Cronex.Supervisor do
   end
 
   def stop_job(%Job{} = job) do
-    slave = get_job_slave(job)
-    Supervisor.terminate_child(:cronex_supervisor, slave)
+    job_pid = get_job_process(job)
+    Supervisor.terminate_child(:cronex_supervisor, job_pid)
   end
 
   def childs do
@@ -31,7 +31,7 @@ defmodule Cronex.Supervisor do
   
   def init(_) do
     children = [
-      worker(Cronex.Slave, [], restart: :transient)
+      worker(Job, [], restart: :transient)
     ]
 
     supervise(children, strategy: :simple_one_for_one)
@@ -40,8 +40,8 @@ defmodule Cronex.Supervisor do
 
   # Private
 
-  defp get_job_slave(%Job{} = job) do
-    slaves = Supervisor.which_children(:cronex_supervisor)
+  defp get_job_process(%Job{} = job) do
+    processes = Supervisor.which_children(:cronex_supervisor)
     # TODO search for job based on job[:id]
   end
 end

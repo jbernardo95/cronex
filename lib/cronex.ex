@@ -5,7 +5,6 @@ defmodule Cronex do
     import Supervisor.Spec, warn: false
 
     children = [
-      worker(Cronex.Master, []),
       supervisor(Cronex.Supervisor, [])
     ]
 
