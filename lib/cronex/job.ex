@@ -4,11 +4,25 @@ defmodule Cronex.Job do
   """
   use GenServer
 
-  defstruct id: nil,
-            task: nil,
-            args: nil,
-            interval: nil
+  defstruct frequency: nil,
+            time: nil,
+            task: nil
 
+  # Job functions
+  def new(frequency, task) do
+    %Cronex.Job{}
+    |> Map.put(:frequency, frequency)
+    |> Map.put(:task, task)
+  end
+
+  def new(frequency, time, task) do
+    %Cronex.Job{}
+    |> Map.put(:frequency, frequency)
+    |> Map.put(:time, time)
+    |> Map.put(:task, task)
+  end
+
+  # GenServer functions
   def start_link(job, opts \\ []) do
     GenServer.start_link(__MODULE__, job)
   end
