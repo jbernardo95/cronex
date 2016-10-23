@@ -1,6 +1,6 @@
 defmodule Cronex.Scheduler do
   @moduledoc """
-  This module represents the scheduler entity.
+  This module implements a scheduler.
   """
 
   defmacro __using__(_opts) do
