@@ -39,7 +39,7 @@ defmodule Cronex.Table do
   end
 
   def handle_info(:ping, state) do
-    for {id, job} <- state[:jobs] do
+    for {_id, job} <- state[:jobs] do
       # TODO check if job can run at current time
       job |> Job.run
     end

@@ -20,8 +20,8 @@ defmodule Cronex.Job do
     |> Map.put(:task, task)
   end
 
-  def run(%Job{task: task}) do
+  def run(%Cronex.Job{task: task}) do
     # TODO add logging message
-    Task.Supervisor.start_child(:cronex_supervisor, task)
+    Task.Supervisor.start_child(:cronex_job_supervisor, task)
   end
 end

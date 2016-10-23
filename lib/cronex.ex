@@ -6,7 +6,7 @@ defmodule Cronex do
 
     children = [
       supervisor(Cronex.Table, [nil]),
-      supervisor(Task.Supervisor, [[name: :cronex_supervisor]])
+      supervisor(Task.Supervisor, [[name: :cronex_job_supervisor]])
     ]
 
     opts = [strategy: :one_for_one, name: Cronex.Supervisor]
