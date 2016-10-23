@@ -23,11 +23,12 @@ defmodule Cronex.Table do
 
   # Callback functions
   def init(_args) do
-    state = %{jobs: Map.new, timer: work_timer}
+    state = %{jobs: Map.new, timer: ping_timer}
     {:ok, state}
   end
 
   def handle_call({:add_job, %Job{} = job}, _from, state) do
+    # TODO verify if job is valid
     index = state[:jobs] |> Map.keys |> Enum.count 
     new_state = put_in(state, [:jobs, index], job)
     {:reply, :ok, new_state}
@@ -37,17 +38,18 @@ defmodule Cronex.Table do
     {:reply, state[:jobs], state}
   end
 
-  def handle_info(:work, state) do
-    IO.puts "Working !"
+  def handle_info(:ping, state) do
+    for {id, job} <- state[:jobs] do
+      # TODO check if job can run at current time
+      job |> Job.run
+    end
 
-    # Map through all jobs and deploy processes
-
-    new_state = state |> Map.put(:timer, work_timer)
+    new_state = state |> Map.put(:timer, ping_timer)
     {:noreply, new_state}
   end
 
   # Private functions
-  defp work_timer do
-    Process.send_after(self, :work, 60000) # 1 min
+  defp ping_timer do
+    Process.send_after(self, :ping, 60000) # 1 min
   end
 end
