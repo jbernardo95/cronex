@@ -8,7 +8,7 @@ defmodule Cronex.JobTest do
       task = fn -> IO.puts "Daily Task" end
       job = Job.new(:daily, task) 
 
-      assert job == %Job{frequency: :daily, time: nil, task: task}
+      assert job == %Job{frequency: {0, 0, :*, :*, :*}, task: task}
     end
   end
 
@@ -17,7 +17,9 @@ defmodule Cronex.JobTest do
       task = fn -> IO.puts "Daily Task" end
       job = Job.new(:daily, "10:00", task) 
 
-      assert job == %Job{frequency: :daily, time: "10:00", task: task}
+      # TODO update test to match time
+
+      assert job == %Job{frequency: {0, 0, :*, :*, :*}, task: task}
     end
   end
 

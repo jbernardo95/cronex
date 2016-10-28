@@ -6,6 +6,7 @@ defmodule Cronex.Table do
   use GenServer
 
   alias Cronex.Job
+  import Cronex.Job
 
   # Interface functions
   def start_link(args, opts \\ []) do
@@ -39,12 +40,11 @@ defmodule Cronex.Table do
   end
 
   def handle_info(:ping, state) do
-    for {_id, job} <- state[:jobs] do
-      # TODO check if job can run at current time
-      job |> Job.run
-    end
+    updated_jobs = Enum.map(state[:jobs], fn({_id, job}) ->
+      if job |> can_run, do: job |> run, else: job
+    end)
 
-    new_state = state |> Map.put(:timer, ping_timer)
+    new_state = %{state | timer: ping_timer, jobs: updated_jobs}
     {:noreply, new_state}
   end
 
