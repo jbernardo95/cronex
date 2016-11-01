@@ -1,6 +1,6 @@
 # Cronex
 
-**TODO: Add description**
+A cron like system built with elixir.
 
 ## Installation
 
