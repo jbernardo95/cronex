@@ -4,17 +4,17 @@ defmodule Cronex.Every do
   """
 
   @doc"""
-  Cronex.Every.every macro is used as a simple interface to add a job to the Cronex.Table.
+  `Cronex.Every.every` macro is used as a simple interface to add a job to the `Cronex.Table`.
 
   ## Example
   
-    every :month, do
-      # Monthly task here 
-    end
+      every :month, do
+        # Monthly task here 
+      end
 
-    every :day, at: "10:00", do
-      # Daily task at 10:00 here 
-    end
+      every :day, at: "10:00", do
+        # Daily task at 10:00 here 
+      end
   """
   defmacro every(frequency, do: block) do
     quote do

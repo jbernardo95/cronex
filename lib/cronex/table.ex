@@ -14,14 +14,14 @@ defmodule Cronex.Table do
   end
 
   @doc"""
-  Adds a %Cronex.Job{} to the cronex table.
+  Adds a `%Cronex.Job{}` to the cronex table.
 
   ## Example
   
-    iex> task = fn -> IO.puts("Task") end
-    iex> job = Cronex.Job.new(:day, task) 
-    iex> Cronex.Table.add_job(job)
-    :ok
+      iex> task = fn -> IO.puts("Task") end
+      iex> job = Cronex.Job.new(:day, task) 
+      iex> Cronex.Table.add_job(job)
+      :ok
   """
   def add_job(server_id \\ :cronex_table, %Job{} = job) do
     GenServer.call(server_id, {:add_job, job})
@@ -32,11 +32,11 @@ defmodule Cronex.Table do
 
   ## Example
   
-    iex> Cronex.Table.get_jobs
-    %{}
+      iex> Cronex.Table.get_jobs
+      %{}
 
-    iex> Cronex.Table.get_jobs
-    %{0 => %Cronex.Job{}}
+      iex> Cronex.Table.get_jobs
+      %{0 => %Cronex.Job{}}
   """
   def get_jobs(server_id \\ :cronex_table) do
     GenServer.call(server_id, :get_jobs)

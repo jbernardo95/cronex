@@ -10,7 +10,7 @@ defmodule Cronex.Job do
             pid: nil
 
   @doc"""
-  Creates a %Job{} with a given frequency and task.
+  Creates a `%Job{}` with a given frequency and task.
   """
   def new(frequency, task)
     when is_atom(frequency) and is_function(task) do
@@ -26,7 +26,7 @@ defmodule Cronex.Job do
   end
 
   @doc"""
-  Runs and updates the pid attribute of a given %Job{}.
+  Runs and updates the pid attribute of a given `%Job{}`.
   """
   def run(%Cronex.Job{task: task} = job) do
     # TODO add logging message
@@ -35,7 +35,7 @@ defmodule Cronex.Job do
   end
 
   @doc"""
-  Checks if a given %Job{} can run, based on it's pid and frequency.
+  Checks if a given `%Job{}` can run, based on it's frequency and pid.
   """
   def can_run(%Cronex.Job{} = job) do
     # TODO Process.alive? only works for local processes, improve this to support several nodes
