@@ -17,6 +17,7 @@ defmodule Cronex.DateTime do
   When Mix.env is equal to :test it return a %Cronex.DateTime{} with all values equal to 0;
 
   ## Example
+  
     iex> current_date_time = Cronex.DateTime.current_date_time
     iex> current_date_time.hour > 0
     true

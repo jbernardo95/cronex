@@ -3,32 +3,33 @@ defmodule Cronex.JobTest do
 
   alias Cronex.Job
 
-  describe "new/2" do
-    test "returns a %Job{}" do
-      task = fn -> IO.puts "Daily Task" end
-      job = Job.new(:daily, task) 
+  test "new/2 returns a %Job{}" do
+    task = fn -> :ok end
+    job = Job.new(:day, task) 
 
-      assert job == %Job{frequency: {0, 0, :*, :*, :*}, task: task}
-    end
+    assert job == %Job{frequency: {0, 0, :*, :*, :*}, task: task}
   end
 
-  describe "new/3" do
-    test "returns a %Job{}" do
-      task = fn -> IO.puts "Daily Task" end
-      job = Job.new(:daily, "10:00", task) 
+  test "new/3 returns a %Job{}" do
+    task = fn -> :ok end
+    job = Job.new(:day, "10:00", task) 
 
-      # TODO update test to match time
-
-      assert job == %Job{frequency: {0, 0, :*, :*, :*}, task: task}
-    end
+    assert job == %Job{frequency: {0, 10, :*, :*, :*}, task: task}
   end
 
-  describe "run/1" do
-    test "returns {:ok, pid}" do
-      task = fn -> IO.puts "Daily Task" end
-      job = Job.new(:daily, task) 
+  test "run/1 returns updated %Job{}" do
+    task = fn -> :ok end
+    job = Job.new(:day, task) 
 
-      assert {:ok, _pid} = Job.run(job)
-    end
+    assert job.pid == nil 
+    %Job{pid: pid} = Job.run(job)
+    assert pid != nil 
+  end
+
+  test "can_run/1 with an every minute job returns true" do
+    task = fn -> :ok end
+    job = Job.new(:minute, task) 
+
+    assert true == Cronex.Job.can_run(job)
   end
 end

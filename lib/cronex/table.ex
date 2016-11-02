@@ -10,16 +10,36 @@ defmodule Cronex.Table do
 
   # Interface functions
   def start_link(args, opts \\ []) do
-    merged_opts = opts ++ [name: :cronex_table]
-    GenServer.start_link(__MODULE__, args, merged_opts)
+    GenServer.start_link(__MODULE__, args, opts)
   end
 
-  def add_job(%Job{} = job) do
-    GenServer.call(:cronex_table, {:add_job, job})
+  @doc"""
+  Adds a %Cronex.Job{} to the cronex table.
+
+  ## Example
+  
+    iex> task = fn -> IO.puts("Task") end
+    iex> job = Cronex.Job.new(:day, task) 
+    iex> Cronex.Table.add_job(job)
+    :ok
+  """
+  def add_job(server_id \\ :cronex_table, %Job{} = job) do
+    GenServer.call(server_id, {:add_job, job})
   end
 
-  def get_jobs do
-    GenServer.call(:cronex_table, :get_jobs)
+  @doc"""
+  Returns a map of the jobs on the cronex table.
+
+  ## Example
+  
+    iex> Cronex.Table.get_jobs
+    %{}
+
+    iex> Cronex.Table.get_jobs
+    %{0 => %Cronex.Job{}}
+  """
+  def get_jobs(server_id \\ :cronex_table) do
+    GenServer.call(server_id, :get_jobs)
   end
 
   # Callback functions

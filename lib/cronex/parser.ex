@@ -1,11 +1,21 @@
 defmodule Cronex.Parser do
-  def parse_frequency(frequency, time \\ nil) do
-    {hour, minute} = case time do
-      nil ->
-        {0, 0} # Default time
-      time ->
-        parse_time(time)
-    end
+  @moduledoc"""
+  This modules is responsible for time parsing.
+  """
+
+  @doc """
+  Parses a given frequency and time to a tuple.
+
+  ## Example
+
+    iex> Cronex.Parser.parse_frequency(:hour)
+    {0, :*, :*, :*, :*}
+
+    iex> Cronex.Parser.parse_frequency(:day, "10:00")
+    {0, 10, :*, :*, :*}
+  """
+  def parse_frequency(frequency, time \\ "00:00") do
+    {hour, minute} = parse_time(time)
 
     cond do
       frequency == :minute ->
@@ -26,6 +36,9 @@ defmodule Cronex.Parser do
   end
 
   defp parse_time(time) when is_bitstring(time) do
-    {_hour, _minute} = time |> String.split(":") |> List.to_tuple
+    time 
+    |> String.split(":")
+    |> Enum.map(&String.to_integer/1)
+    |> List.to_tuple
   end
 end
