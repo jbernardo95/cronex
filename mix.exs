@@ -4,30 +4,31 @@ defmodule Cronex.Mixfile do
   def project do
     [app: :cronex,
      version: "0.1.0",
+
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps()]
+
+     deps: deps(),
+     package: package(),
+
+     name: "Cronex",
+     description: "A cron like system built with elixir",
+     source_url: "https://github.com/jbernardo95/cronex"]
   end
 
-  # Configuration for the OTP application
-  #
-  # Type "mix help compile.app" for more information
   def application do
     [applications: [:logger],
      mod: {Cronex, []}]
   end
 
-  # Dependencies can be Hex packages:
-  #
-  #   {:mydep, "~> 0.3.0"}
-  #
-  # Or git/path repositories:
-  #
-  #   {:mydep, git: "https://github.com/elixir-lang/mydep.git", tag: "0.1.0"}
-  #
-  # Type "mix help deps" for more examples and options
   defp deps do
     []
+  end
+
+  def package do
+    [maintainers: ["jbernardo95"],
+     licenses: ["MIT"],
+     links: %{"GitHub" => "https://github.com/jbernardo95/cronex"}]
   end
 end
