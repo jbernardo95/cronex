@@ -61,11 +61,12 @@ defmodule Cronex.Table do
   def handle_info(:ping, state) do
     new_timer = ping_timer
 
-    updated_jobs = Enum.map(state[:jobs], fn({_id, job}) ->
-      if job |> can_run, do: job |> run, else: job
-    end)
+    updated_jobs = for {id, job} <- state[:jobs], into: %{} do
+      updated_job = if job |> can_run, do: job |> run, else: job
+      {id, updated_job}
+    end
 
-    new_state = %{state | timer: new_timer, jobs: updated_jobs}
+    new_state = %{timer: new_timer, jobs: updated_jobs}
     {:noreply, new_state}
   end
 
