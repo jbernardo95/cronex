@@ -49,7 +49,6 @@ defmodule Cronex.Table do
   end
 
   def handle_call({:add_job, %Job{} = job}, _from, state) do
-    # TODO verify if job is valid
     index = state[:jobs] |> Map.keys |> Enum.count 
     new_state = put_in(state, [:jobs, index], job)
     {:reply, :ok, new_state}
@@ -60,11 +59,13 @@ defmodule Cronex.Table do
   end
 
   def handle_info(:ping, state) do
+    new_timer = ping_timer
+
     updated_jobs = Enum.map(state[:jobs], fn({_id, job}) ->
       if job |> can_run, do: job |> run, else: job
     end)
 
-    new_state = %{state | timer: ping_timer, jobs: updated_jobs}
+    new_state = %{state | timer: new_timer, jobs: updated_jobs}
     {:noreply, new_state}
   end
 

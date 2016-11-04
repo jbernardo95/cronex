@@ -7,6 +7,8 @@ defmodule Cronex.Scheduler do
     quote do
       require Cronex.Every
       import Cronex.Every
+
+      Application.ensure_all_started(:cronex)
     end
   end
 end
