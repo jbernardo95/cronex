@@ -44,13 +44,25 @@ defmodule Cronex.Table do
 
   # Callback functions
   def init(_args) do
+    GenServer.cast(self, :init)
     state = %{jobs: Map.new, timer: ping_timer}
     {:ok, state}
   end
 
+  def handle_cast(:init, state) do
+    module = Application.fetch_env!(:cronex, :scheduler)
+
+    new_state = module.__info__(:functions)
+    |> Enum.reduce(state, fn({function, _arity}, state) ->
+      job = apply(module, function, [])
+      state |> do_add_job(job)
+    end)
+
+    {:noreply, new_state}
+  end
+
   def handle_call({:add_job, %Job{} = job}, _from, state) do
-    index = state[:jobs] |> Map.keys |> Enum.count 
-    new_state = put_in(state, [:jobs, index], job)
+    new_state = state |> add_job(job)
     {:reply, :ok, new_state}
   end
 
@@ -71,6 +83,11 @@ defmodule Cronex.Table do
   end
 
   # Private functions
+  defp do_add_job(state, %Job{} = job) do
+    index = state[:jobs] |> Map.keys |> Enum.count 
+    put_in(state, [:jobs, index], job)
+  end
+
   defp ping_timer do
     Process.send_after(self, :ping, 60000) # 1 min
   end
