@@ -36,7 +36,7 @@ defmodule Cronex.Table do
       %{}
 
       iex> Cronex.Table.get_jobs
-      %{0 => %Cronex.Job{}}
+      %{0 => %Cronex.Job{...}}
   """
   def get_jobs(server_id \\ :cronex_table) do
     GenServer.call(server_id, :get_jobs)
@@ -50,19 +50,24 @@ defmodule Cronex.Table do
   end
 
   def handle_cast(:init, state) do
-    module = Application.fetch_env!(:cronex, :scheduler)
+    module = Application.get_env(:cronex, :scheduler)
 
-    new_state = module.__info__(:functions)
-    |> Enum.reduce(state, fn({function, _arity}, state) ->
-      job = apply(module, function, [])
-      state |> do_add_job(job)
-    end)
+    new_state = case module do
+      nil ->
+        state
+      module ->
+        module.__info__(:functions)
+        |> Enum.reduce(state, fn({function, _arity}, state) ->
+          job = apply(module, function, [])
+          state |> do_add_job(job)
+        end)
+    end
 
     {:noreply, new_state}
   end
 
   def handle_call({:add_job, %Job{} = job}, _from, state) do
-    new_state = state |> add_job(job)
+    new_state = state |> do_add_job(job)
     {:reply, :ok, new_state}
   end
 

@@ -4,6 +4,10 @@ defmodule Cronex.TableTest do
 
   alias Cronex.Job
 
+  setup_all do
+    Application.put_env(:cronex, :scheduler, nil)
+  end
+
   setup do
     {:ok, table} = Cronex.Table.start_link(nil)
     {:ok, table: table}
@@ -14,7 +18,7 @@ defmodule Cronex.TableTest do
       assert %{} == Cronex.Table.get_jobs(table)
     end
 
-    test "with one jobs return %{0 => %Job{}}", %{table: table} do
+    test "with one job return %{0 => %Job{}}", %{table: table} do
       task = fn -> :ok end
       job = Job.new(:day, task) 
 
