@@ -6,13 +6,11 @@ A cron like system built with elixir.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
-
   1. Add `cronex` to your list of dependencies in `mix.exs`:
 
     ```elixir
     def deps do
-      [{:cronex, "~> 0.1.0"}]
+      [{:cronex, "~> 0.1.1"}]
     end
     ```
 
@@ -24,3 +22,26 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
     end
     ```
 
+## Getting started
+
+Cronex makes it really easy and intuitive to schedule cron like jobs.
+
+```elixir
+# Somewhere in your application define your scheduler
+defmodule MyApp.Scheduler do
+  use Cronex.Scheduler
+
+  every :hour do
+    IO.puts "Every hour job"
+  end
+
+  every :day, at: "10:00" do
+    IO.puts "Every day job at 10:00"
+  end
+end
+
+# In your config/config.exs file
+config :cronex, scheduler: MyApp.Scheduler
+```
+
+Cronex will gather jobs from the scheduler you defined and will run them at the expected time.
