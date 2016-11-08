@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- `Cronex.Every.every/3` macro
+
+### Improved 
+- README with a `Getting Started` section
+
 ## Version 0.1.1 - 2016/11/05
 
 ### Fixed

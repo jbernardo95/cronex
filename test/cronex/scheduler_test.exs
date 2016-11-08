@@ -6,12 +6,12 @@ defmodule Cronex.SchedulerTest do
   defmodule TestScheduler do
     use Cronex.Scheduler
 
-    every :day do
-      IO.puts "Every day task"
-    end
-
     every :minute do
       IO.puts "Every minute task"
+    end
+
+    every :day, at: "10:00" do
+      IO.puts "Every day task at 10:00"
     end
   end
 

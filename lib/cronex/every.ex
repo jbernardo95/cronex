@@ -23,7 +23,7 @@ defmodule Cronex.Every do
       end
     end
   end
-  defmacro every(frequency, at: time, do: block) do
+  defmacro every(frequency, [at: time], [do: block]) do
     quote do
       def unquote(:"job_every_#{frequency}_at_#{time}")() do
         Cronex.Job.new(unquote(frequency), unquote(time), fn -> unquote(block) end)
