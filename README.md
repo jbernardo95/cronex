@@ -2,7 +2,7 @@
 
 [![Travis Build](https://api.travis-ci.org/jbernardo95/cronex.svg?branch=master)](https://travis-ci.org/jbernardo95/cronex/)
 
-A cron like system built with elixir.
+A cron like system built with elixir, inspired by [whenever](https://github.com/javan/whenever) ruby gem.
 
 ## Installation
 
