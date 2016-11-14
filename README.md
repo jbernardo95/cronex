@@ -45,3 +45,11 @@ config :cronex, scheduler: MyApp.Scheduler
 ```
 
 Cronex will gather jobs from the scheduler you defined and will run them at the expected time.
+
+## Roadmap
+
+- [ ] Add Logger
+- [ ] Add how it works to readme
+- [ ] More complex every statements (every 3 days, every 4 hours, etc…)
+- [ ] Fault tolerant capabilities
+- [ ] Test helpers to test jobs ???
