@@ -52,16 +52,17 @@ defmodule Cronex.Table do
   def handle_cast(:init, state) do
     module = Application.get_env(:cronex, :scheduler)
 
-    new_state = case module do
-      nil ->
-        state
-      module ->
-        module.__info__(:functions)
-        |> Enum.reduce(state, fn({function, _arity}, state) ->
-          job = apply(module, function, [])
-          state |> do_add_job(job)
-        end)
-    end
+    new_state =
+      case module do
+        nil ->
+          state
+        module ->
+          module.__info__(:functions)
+          |> Enum.reduce(state, fn({function, _arity}, state) ->
+            job = apply(module, function, [])
+            state |> do_add_job(job)
+          end)
+      end
 
     {:noreply, new_state}
   end
@@ -76,14 +77,15 @@ defmodule Cronex.Table do
   end
 
   def handle_info(:ping, state) do
-    new_timer = ping_timer
+    updated_jobs =
+      for {id, job} <- state[:jobs], into: %{} do
+        updated_job = if job |> can_run, do: job |> run, else: job
+        {id, updated_job}
+      end
 
-    updated_jobs = for {id, job} <- state[:jobs], into: %{} do
-      updated_job = if job |> can_run, do: job |> run, else: job
-      {id, updated_job}
-    end
+    updated_timer = ping_timer
 
-    new_state = %{timer: new_timer, jobs: updated_jobs}
+    new_state = %{timer: updated_timer, jobs: updated_jobs}
     {:noreply, new_state}
   end
 
@@ -94,6 +96,6 @@ defmodule Cronex.Table do
   end
 
   defp ping_timer do
-    Process.send_after(self, :ping, 60000) # 1 min
+    Process.send_after(self, :ping, 30000) # 30 sec 
   end
 end
