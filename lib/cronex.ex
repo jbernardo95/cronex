@@ -5,7 +5,7 @@ defmodule Cronex do
     import Supervisor.Spec, warn: false
 
     children = [
-      supervisor(Cronex.Table, [nil, [name: :cronex_table]]),
+      worker(Cronex.Table, [nil, [name: :cronex_table]]),
       supervisor(Task.Supervisor, [[name: :cronex_job_supervisor]])
     ]
 
