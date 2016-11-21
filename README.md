@@ -48,8 +48,7 @@ Cronex will gather jobs from the scheduler you defined and will run them at the 
 
 ## Roadmap
 
-- [ ] Add Logger
+- [ ] Extract error handling logic outside of cronex domain with a scheulder developers can use in their supervision trees
 - [ ] Add how it works to readme
 - [ ] More complex every statements (every 3 days, every 4 hours, etc…)
-- [ ] Fault tolerant capabilities
 - [ ] Test helpers to test jobs ???
