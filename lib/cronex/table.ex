@@ -43,26 +43,29 @@ defmodule Cronex.Table do
   end
 
   # Callback functions
-  def init(_args) do
+  def init(args) do
     GenServer.cast(self, :init)
-    state = %{jobs: Map.new, timer: ping_timer}
+
+    scheduler = args[:scheduler] || Application.get_env(:cronex, :scheduler) 
+    state = %{scheduler: scheduler,
+              jobs: Map.new,
+              timer: ping_timer}
+
     {:ok, state}
   end
 
-  def handle_cast(:init, state) do
-    module = Application.get_env(:cronex, :scheduler)
-
+  def handle_cast(:init, %{scheduler: nil} = state), do: {:noreply, state}
+  def handle_cast(:init, %{scheduler: scheduler} = state) do
     new_state =
-      case module do
-        nil ->
+      scheduler.__info__(:functions)
+      |> Enum.reduce(state, fn({function, _arity}, state) ->
+        if Atom.to_string(function) =~ "job_every_" do
+          job = apply(scheduler, function, [])
+          state |> do_add_job(job)
+        else
           state
-        module ->
-          module.__info__(:functions)
-          |> Enum.reduce(state, fn({function, _arity}, state) ->
-            job = apply(module, function, [])
-            state |> do_add_job(job)
-          end)
-      end
+        end
+      end)
 
     {:noreply, new_state}
   end
@@ -76,16 +79,22 @@ defmodule Cronex.Table do
     {:reply, state[:jobs], state}
   end
 
-  def handle_info(:ping, state) do
+  def handle_info(:ping, %{scheduler: scheduler} = state) do
+    updated_timer = ping_timer
+
     updated_jobs =
       for {id, job} <- state[:jobs], into: %{} do
-        updated_job = if job |> can_run, do: job |> run, else: job
+        updated_job =
+          if job |> can_run do
+            job |> run(scheduler.job_supervisor_name)
+          else
+            job
+          end
+
         {id, updated_job}
       end
 
-    updated_timer = ping_timer
-
-    new_state = %{timer: updated_timer, jobs: updated_jobs}
+    new_state = %{state | timer: updated_timer, jobs: updated_jobs}
     {:noreply, new_state}
   end
 

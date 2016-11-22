@@ -3,6 +3,12 @@ defmodule Cronex.Every do
   This module defines scheduling macros.
   """
 
+  defmacro __using__(_opts) do
+    quote do
+      import Cronex.Every
+    end
+  end
+
   @doc"""
   `Cronex.Every.every` macro is used as a simple interface to add a job to the `Cronex.Table`.
 

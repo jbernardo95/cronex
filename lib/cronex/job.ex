@@ -28,9 +28,8 @@ defmodule Cronex.Job do
   @doc"""
   Runs and updates the pid attribute of a given `%Job{}`.
   """
-  def run(%Cronex.Job{task: task} = job) do
-    # TODO add logging message
-    {:ok, pid} = Task.Supervisor.start_child(:cronex_job_supervisor, task)
+  def run(%Cronex.Job{task: task} = job, supervisor \\ :cronex_job_supervisor) do
+    {:ok, pid} = Task.Supervisor.start_child(supervisor, task)
     job |> Map.put(:pid, pid)
   end
 
