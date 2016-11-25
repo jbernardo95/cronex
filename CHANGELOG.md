@@ -3,11 +3,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- Cronex is no longer an `Application`, it is now a `Supervisor` defined by `Cronex.Scheduler`
+
 ### Fixed
 - `Cronex.Every.every/3` macro
 
 ### Improved 
 - README with a `Getting Started` section
+- Overall tests
 
 ## Version 0.1.1 - 2016/11/05
 

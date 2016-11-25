@@ -1,6 +1,8 @@
 defmodule Cronex.DateTime do
   @moduledoc"""
   This module is an extention of the elixir DateTime module.
+
+  This will module will be deprecated as soon as Elixir 1.4 is out.
   """
 
   defstruct year: 0,

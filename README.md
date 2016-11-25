@@ -65,6 +65,17 @@ You can define as much schedulers as you want.
 
 ## Roadmap
 
-- [ ] Add how it works to readme
+- [ ] Improve overall documentation
+- [ ] Improve job `can_run/1` tests (with every possible combiantion) 
+- [ ] Add support for different time zones
+- [ ] Add support to run jobs in different nodes 
 - [ ] More complex every statements (every 3 days, every 4 hours, etc…)
-- [ ] Test helpers to test jobs ???
+- [ ] Add test helpers to test jobs/schedulers
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/jbernardo95/cronex.
+
+## License
+
+Cronex source code is licensed under the [MIT License](LICENSE.md).
