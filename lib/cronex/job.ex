@@ -28,7 +28,7 @@ defmodule Cronex.Job do
   @doc"""
   Runs and updates the pid attribute of a given `%Job{}`.
   """
-  def run(%Cronex.Job{task: task} = job, supervisor \\ Cronex.JobSupervisor) do
+  def run(%Cronex.Job{task: task} = job, supervisor) do
     {:ok, pid} = Task.Supervisor.start_child(supervisor, task)
     job |> Map.put(:pid, pid)
   end

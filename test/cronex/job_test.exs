@@ -3,6 +3,11 @@ defmodule Cronex.JobTest do
 
   alias Cronex.Job
 
+  setup do
+    {:ok, job_supervisor} = Task.Supervisor.start_link 
+    {:ok, job_supervisor: job_supervisor}
+  end
+
   test "new/2 returns a %Job{}" do
     task = fn -> :ok end
     job = Job.new(:day, task) 
@@ -17,12 +22,12 @@ defmodule Cronex.JobTest do
     assert job == %Job{frequency: {0, 10, :*, :*, :*}, task: task}
   end
 
-  test "run/1 returns updated %Job{}" do
+  test "run/1 returns updated %Job{}", %{job_supervisor: job_supervisor} do
     task = fn -> :ok end
     job = Job.new(:day, task) 
 
     assert job.pid == nil 
-    %Job{pid: pid} = Job.run(job)
+    %Job{pid: pid} = Job.run(job, job_supervisor)
     assert pid != nil 
   end
 

@@ -20,11 +20,11 @@ defmodule Cronex.Table do
   
       iex> task = fn -> IO.puts("Task") end
       iex> job = Cronex.Job.new(:day, task) 
-      iex> Cronex.Table.add_job(job)
+      iex> Cronex.Table.add_job(table_pid, job)
       :ok
   """
-  def add_job(server_pid \\ Cronex.Table, %Job{} = job) do
-    GenServer.call(server_pid, {:add_job, job})
+  def add_job(pid, %Job{} = job) do
+    GenServer.call(pid, {:add_job, job})
   end
 
   @doc"""
@@ -32,14 +32,11 @@ defmodule Cronex.Table do
 
   ## Example
   
-      iex> Cronex.Table.get_jobs
-      %{}
-
-      iex> Cronex.Table.get_jobs
+      iex> Cronex.Table.get_jobs(table_pid)
       %{0 => %Cronex.Job{...}}
   """
-  def get_jobs(server_pid \\ Cronex.Table) do
-    GenServer.call(server_pid, :get_jobs)
+  def get_jobs(pid) do
+    GenServer.call(pid, :get_jobs)
   end
 
   # Callback functions

@@ -18,8 +18,7 @@ defmodule Cronex.Mixfile do
   end
 
   def application do
-    [applications: [:logger],
-     mod: {Cronex, []}]
+    [applications: [:logger]]
   end
 
   defp deps do

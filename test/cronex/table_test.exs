@@ -1,12 +1,21 @@
 defmodule Cronex.TableTest do
   use ExUnit.Case
-  doctest Cronex.Table, except: [get_jobs: 0, get_jobs: 1]
+  doctest Cronex.Table, except: [add_job: 2, get_jobs: 1]
 
   alias Cronex.Job
 
   setup do
     {:ok, table} = Cronex.Table.start_link(scheduler: nil)
     {:ok, table: table}
+  end
+
+  describe "add_job/2" do
+    test "returns :ok", %{table: table} do
+      task = fn -> IO.puts("Task") end
+      job = Cronex.Job.new(:day, task) 
+
+      assert :ok == Cronex.Table.add_job(table, job)
+    end
   end
 
   describe "get_jobs/1" do

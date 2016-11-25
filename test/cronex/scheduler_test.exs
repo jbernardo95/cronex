@@ -15,7 +15,7 @@ defmodule Cronex.SchedulerTest do
     end
   end
 
-  setup do
+  setup_all do
     {:ok, _scheduler} = TestScheduler.start_link
     :ok
   end

@@ -63,33 +63,8 @@ end
 
 You can define as much schedulers as you want.
 
-You can also use Cronex as an application:
-
-```elixir
-# mix.exs
-def application do
-  [applications: [:cronex]]
-end
-
-# Somewhere in your application define your scheduler
-defmodule MyApp.Scheduler do
-  use Cronex.Scheduler
-
-  every :hour do
-    IO.puts "Every hour job"
-  end
-
-  every :day, at: "10:00" do
-    IO.puts "Every day job at 10:00"
-  end
-end
-```
-
-When you use Cronex as an application, a Cronex.Scheduler is being defined and registeres with the name of `Cronex`.
-
 ## Roadmap
 
-- [ ] Extract error handling logic outside of cronex domain with a scheulder developers can use in their supervision trees
 - [ ] Add how it works to readme
 - [ ] More complex every statements (every 3 days, every 4 hours, etc…)
 - [ ] Test helpers to test jobs ???
