@@ -20,74 +20,72 @@ Then run `mix deps.get` to get the package.
 
 Cronex makes it really easy and intuitive to schedule cron like jobs.
 
-Cronex has two ways of working:
-
-  1. **As an application**
-    
-    You can only have **one** scheduler using this option. 
-
-    ```elixir
-    # mix.exs
-    def application do
-      [applications: [:cronex]]
-    end
-
-    # Somewhere in your application define your scheduler
-    defmodule MyApp.Scheduler do
-      use Cronex.Scheduler
-
-      every :hour do
-        IO.puts "Every hour job"
-      end
-
-      every :day, at: "10:00" do
-        IO.puts "Every day job at 10:00"
-      end
-    end
-
-    # In your config/config.exs file
-    config :cronex, scheduler: MyApp.Scheduler
-    ```
-
-  2. **As a module you can use in your supervision tree**
-
-    You can define as much schedulers as you want with this option.
-
-    ```elixir
-    # Somewhere in your application define your scheduler
-    defmodule MyApp.Scheduler do
-      use Cronex.Scheduler
-
-      every :hour do
-        IO.puts "Every hour job"
-      end
-
-      every :day, at: "10:00" do
-        IO.puts "Every day job at 10:00"
-      end
-    end
-
-    # Your application supervisor
-    defmodule MyApp.Supervisor do
-      use Supervisor
-
-      # ...
-
-      def init(_opts) do
-        children = [
-          # ...
-          supervisor(MyApp.Scheduler, [])
-          # ...
-        ]
-        
-        supervise(children, strategy: :one_for_one)
-      end
-
-      # ...
-    end
-    ```
+You use the `Cronex.Scheduler` module to define a scheduler and add jobs to it.
 
 Cronex will gather jobs from the scheduler you defined and will run them at the expected time.
+
+```elixir
+# Somewhere in your application define your scheduler
+defmodule MyApp.Scheduler do
+  use Cronex.Scheduler
+
+  every :hour do
+    IO.puts "Every hour job"
+  end
+
+  every :day, at: "10:00" do
+    IO.puts "Every day job at 10:00"
+  end
+end
+
+# Start scheduler with start_link
+MyApp.Scheduler.start_link
+
+# Or add it to your supervision tree
+defmodule MyApp.Supervisor do
+  use Supervisor
+
+  # ...
+
+  def init(_opts) do
+    children = [
+      # ...
+      supervisor(MyApp.Scheduler, [])
+      # ...
+    ]
+
+    supervise(children, strategy: :one_for_one)
+  end
+
+  # ...
+end
+```
+
+You can define as much schedulers as you want.
+
+You can also use Cronex as an application:
+
+```elixir
+# mix.exs
+def application do
+  [applications: [:cronex]]
+end
+
+# Somewhere in your application define your scheduler
+defmodule MyApp.Scheduler do
+  use Cronex.Scheduler
+
+  every :hour do
+    IO.puts "Every hour job"
+  end
+
+  every :day, at: "10:00" do
+    IO.puts "Every day job at 10:00"
+  end
+end
+```
+
+When you use Cronex as an application, a Cronex.Scheduler is being defined and registeres with the name of `Cronex`.
 
 ## Roadmap
 

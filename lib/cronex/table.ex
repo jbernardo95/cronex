@@ -23,8 +23,8 @@ defmodule Cronex.Table do
       iex> Cronex.Table.add_job(job)
       :ok
   """
-  def add_job(server_id \\ :cronex_table, %Job{} = job) do
-    GenServer.call(server_id, {:add_job, job})
+  def add_job(server_pid \\ Cronex.Table, %Job{} = job) do
+    GenServer.call(server_pid, {:add_job, job})
   end
 
   @doc"""
@@ -38,23 +38,22 @@ defmodule Cronex.Table do
       iex> Cronex.Table.get_jobs
       %{0 => %Cronex.Job{...}}
   """
-  def get_jobs(server_id \\ :cronex_table) do
-    GenServer.call(server_id, :get_jobs)
+  def get_jobs(server_pid \\ Cronex.Table) do
+    GenServer.call(server_pid, :get_jobs)
   end
 
   # Callback functions
   def init(args) do
     GenServer.cast(self, :init)
 
-    scheduler = args[:scheduler] || Application.get_env(:cronex, :scheduler) 
-    state = %{scheduler: scheduler,
+    state = %{scheduler: args[:scheduler],
               jobs: Map.new,
               timer: ping_timer}
 
     {:ok, state}
   end
 
-  def handle_cast(:init, %{scheduler: nil} = state), do: {:noreply, state}
+  def handle_cast(:init, %{scheduler: nil} = state), do: {:noreply, state} 
   def handle_cast(:init, %{scheduler: scheduler} = state) do
     new_state =
       scheduler.__info__(:functions)
@@ -86,7 +85,7 @@ defmodule Cronex.Table do
       for {id, job} <- state[:jobs], into: %{} do
         updated_job =
           if job |> can_run do
-            job |> run(scheduler.job_supervisor_name)
+            job |> run(scheduler.job_supervisor)
           else
             job
           end

@@ -11,26 +11,26 @@ defmodule Cronex.Scheduler do
       use Cronex.Every
 
       def start_link do
-        Supervisor.start_link(__MODULE__, [])
+        Supervisor.start_link(__MODULE__, nil, name: __MODULE__)
       end
 
       def init(_opts) do
         children = [
-          worker(Cronex.Table, [[scheduler: __MODULE__], [name: table_name]]),
-          supervisor(Task.Supervisor, [[name: job_supervisor_name]])
+          supervisor(Task.Supervisor, [[name: job_supervisor]]),
+          worker(Cronex.Table, [[scheduler: __MODULE__], [name: table]])
         ]
 
         supervise(children, strategy: :one_for_one)
       end
-
-      @doc false
-      def table_name do
-        :"#{__MODULE__}.Table" 
-      end
       
       @doc false
-      def job_supervisor_name do
+      def job_supervisor do
         :"#{__MODULE__}.JobSupervisor" 
+      end
+
+      @doc false
+      def table do
+        :"#{__MODULE__}.Table" 
       end
     end
   end

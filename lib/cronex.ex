@@ -1,15 +1,8 @@
 defmodule Cronex do
   use Application
+  use Cronex.Scheduler
 
   def start(_type, _args) do
-    import Supervisor.Spec, warn: false
-
-    children = [
-      worker(Cronex.Table, [nil, [name: :cronex_table]]),
-      supervisor(Task.Supervisor, [[name: :cronex_job_supervisor]])
-    ]
-
-    opts = [strategy: :one_for_one, name: Cronex.Supervisor]
-    Supervisor.start_link(children, opts)
+    start_link
   end
 end

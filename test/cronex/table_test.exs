@@ -4,12 +4,8 @@ defmodule Cronex.TableTest do
 
   alias Cronex.Job
 
-  setup_all do
-    Application.put_env(:cronex, :scheduler, nil)
-  end
-
   setup do
-    {:ok, table} = Cronex.Table.start_link(nil)
+    {:ok, table} = Cronex.Table.start_link(scheduler: nil)
     {:ok, table: table}
   end
 
