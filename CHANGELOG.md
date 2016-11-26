@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## Version 0.2 - 2016/11/26
+
 ### Changed
 - Cronex is no longer an `Application`, it is now a `Supervisor` defined by `Cronex.Scheduler`
 
