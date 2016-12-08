@@ -67,10 +67,10 @@ You can define as much schedulers as you want.
 
 - [ ] Improve overall documentation
 - [ ] Improve job `can_run/1` tests (with every possible combiantion) 
-- [ ] Add support for different time zones
 - [ ] Add support to run jobs in different nodes 
 - [ ] More complex every statements (every 3 days, every 4 hours, etc…)
 - [ ] Add test helpers to test jobs/schedulers
+- [ ] Add support for different time zones
 
 ## Contributing
 

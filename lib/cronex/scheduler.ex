@@ -14,6 +14,7 @@ defmodule Cronex.Scheduler do
         Supervisor.start_link(__MODULE__, nil, name: __MODULE__)
       end
 
+      @doc false
       def init(_opts) do
         children = [
           supervisor(Task.Supervisor, [[name: job_supervisor]]),
