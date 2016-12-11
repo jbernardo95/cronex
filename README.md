@@ -10,7 +10,7 @@ Add `cronex` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:cronex, "~> 0.1.1"}]
+  [{:cronex, "~> 0.2.0"}]
 end
 ```
 
@@ -62,6 +62,10 @@ end
 ```
 
 You can define as much schedulers as you want.
+
+## Documentation
+
+The project documentation can be found [here](https://hexdocs.pm/cronex/api-reference.html).
 
 ## Roadmap
 

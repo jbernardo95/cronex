@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Improved 
+- Overall project documentation
+
 ## Version 0.2 - 2016/11/26
 
 ### Changed
