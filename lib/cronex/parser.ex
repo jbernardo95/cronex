@@ -13,6 +13,9 @@ defmodule Cronex.Parser do
 
       iex> Cronex.Parser.parse_frequency(:day, "10:00")
       {0, 10, :*, :*, :*}
+
+      iex> Cronex.Parser.parse_frequency(:day, "12:10")
+      {10, 12, :*, :*, :*}
   """
   def parse_frequency(frequency, time \\ "00:00") do
     {hour, minute} = parse_time(time)

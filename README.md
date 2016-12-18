@@ -70,7 +70,7 @@ The project documentation can be found [here](https://hexdocs.pm/cronex/api-refe
 ## Roadmap
 
 - [ ] Improve overall documentation
-- [ ] Improve job `can_run/1` tests (with every possible combiantion) 
+- [ ] Add support for week days (`every :friday, do: ...`) 
 - [ ] Add support to run jobs in different nodes 
 - [ ] More complex every statements (every 3 days, every 4 hours, etc…)
 - [ ] Add test helpers to test jobs/schedulers

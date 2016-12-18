@@ -24,7 +24,7 @@ defmodule Cronex.DateTime do
       iex> current_date_time.hour > 0
       true
   """
-  def current_date_time do
+  def current do
     current_date_time = DateTime.utc_now
     current_day_of_the_week = current_date_time |> DateTime.to_date |> Date.to_erl |> :calendar.day_of_the_week
 

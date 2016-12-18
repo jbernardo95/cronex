@@ -52,30 +52,26 @@ defmodule Cronex.Job do
 
   # Every hour job, check minute of job
   defp is_time({minute, :*, :*, :*, :*}) do
-    Cronex.DateTime.current_date_time.minute == minute
+    current_date_time.minute == minute
   end
 
   # Every day job, check time of job
   defp is_time({minute, hour, :*, :*, :*}) do
-    current_date_time = Cronex.DateTime.current_date_time
     current_date_time.minute == minute and current_date_time.hour == hour
   end
 
   # Every week job, check time and day of the week
   defp is_time({minute, hour, :*, :*, day_week}) do
-    current_date_time = Cronex.DateTime.current_date_time
     current_date_time.minute == minute and current_date_time.hour == hour and current_date_time.day_of_the_week == day_week
   end
 
   # Every month job, check day and time of job
   defp is_time({minute, hour, day, :*, :*}) do
-    current_date_time = Cronex.DateTime.current_date_time
     current_date_time.minute == minute and current_date_time.hour == hour and current_date_time.day == day
   end
 
   # Every year job, check month, day and time of job
   defp is_time({minute, hour, day, month, :*}) do
-    current_date_time = Cronex.DateTime.current_date_time
     current_date_time.minute == minute and 
     current_date_time.hour == hour and
     current_date_time.day == day and
@@ -83,4 +79,9 @@ defmodule Cronex.Job do
   end
 
   defp is_time(_frequency), do: false
+
+  defp current_date_time do
+    date_time_provider = Application.get_env(:cronex, :date_time_provider, Cronex.DateTime)
+    date_time_provider.current
+  end
 end
