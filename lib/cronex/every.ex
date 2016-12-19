@@ -14,11 +14,15 @@ defmodule Cronex.Every do
 
   ## Input Arguments
   
-  `frequency` supports the following values: `:minute`, `hour`, `day`, `month`, `year` 
+  `frequency` supports the following values: `:minute`, `:hour`, `:day`, `:month`, `:year`, `:monday`, `:tuesday`, `:wednesday`, `:thursday`, `:friday`, `:saturday`, `:sunday`
   
   `job` must be a list with the following structure: `[do: block]`, where `block` is the code refering to a specific job 
 
   ## Example
+
+      every :day, do
+        # Daily task here 
+      end
   
       every :month, do
         # Monthly task here 
@@ -38,9 +42,9 @@ defmodule Cronex.Every do
 
   ## Input Arguments
   
-  `frequency` supports the following values: `:minute`, `hour`, `day`, `month`, `year` 
+  `frequency` supports the following values: `:minute`, `:hour`, `:day`, `:month`, `:year`, `:monday`, `:tuesday`, `:wednesday`, `:thursday`, `:friday`, `:saturday`, `:sunday`
 
-  `at` must be a list with the following structure: `[at: time]`, where `time` is a string with the following format `HH:MM`, where `HH` represents the hour and `MM` the minutes at which the job should be run 
+  `at` must be a list with the following structure: `[at: time]`, where `time` is a string with the following format `HH:MM`, where `HH` represents the hour and `MM` the minutes at which the job should be run, this value is ignored when given in an every minute or every hour job 
   
   `job` must be a list with the following structure: `[do: block]`, where `block` is the code corresponding to a specific job
 
@@ -48,6 +52,10 @@ defmodule Cronex.Every do
   
       every :day, at: "10:00", do
         # Daily task at 10:00 here 
+      end
+
+      every :monday, at: "12:00", do
+        # Monday task at 12:00 here 
       end
   """
   defmacro every(frequency, [at: time] = _at, [do: block] = _job) do

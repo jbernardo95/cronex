@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- Support for week days
+
 ### Improved 
 - Overall project documentation
 - `Job.can_run` tests

@@ -11,7 +11,7 @@ defmodule Cronex.DateTime do
             hour: 0,
             minute: 0,
             second: 0,
-            day_of_the_week: 0 
+            day_of_week: 0 
 
   @doc"""
   Returns current date and time as a `%Cronex.DateTime{}`.
@@ -24,7 +24,7 @@ defmodule Cronex.DateTime do
   """
   def current do
     current_date_time = DateTime.utc_now
-    current_day_of_the_week = current_date_time |> DateTime.to_date |> Date.to_erl |> :calendar.day_of_the_week
+    current_day_of_week = current_date_time |> DateTime.to_date |> Date.to_erl |> :calendar.day_of_the_week
 
     %Cronex.DateTime{year: current_date_time.year,
                      month: current_date_time.month,
@@ -32,6 +32,6 @@ defmodule Cronex.DateTime do
                      hour: current_date_time.hour,
                      minute: current_date_time.minute,
                      second: current_date_time.second,
-                     day_of_the_week: current_day_of_the_week}
+                     day_of_week: current_day_of_week}
   end
 end

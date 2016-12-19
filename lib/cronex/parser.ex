@@ -3,6 +3,8 @@ defmodule Cronex.Parser do
   This modules is responsible for time parsing.
   """
 
+  @days_of_week [:monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday]
+
   @doc """
   Parses a given frequency and time to a tuple.
 
@@ -16,6 +18,9 @@ defmodule Cronex.Parser do
 
       iex> Cronex.Parser.parse_frequency(:day, "12:10")
       {10, 12, :*, :*, :*}
+
+      iex> Cronex.Parser.parse_frequency(:wednesday, "12:00")
+      {0, 12, :*, :*, 3}
   """
   def parse_frequency(frequency, time \\ "00:00") do
     {hour, minute} = parse_time(time)
@@ -35,6 +40,10 @@ defmodule Cronex.Parser do
 
       frequency == :year ->
         {minute, hour, 1, 1, :*}
+
+      frequency in @days_of_week ->
+        day_of_week = Enum.find_index(@days_of_week, &(&1 == frequency)) + 1
+        {minute, hour, :*, :*, day_of_week}
     end
   end
 
