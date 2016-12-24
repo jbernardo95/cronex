@@ -40,7 +40,7 @@ defmodule Cronex.Job do
   @doc"""
   Checks if a given `%Job{}` can run, based on it's frequency and pid.
   """
-  def can_run(%Cronex.Job{} = job) do
+  def can_run?(%Cronex.Job{} = job) do
     # TODO Process.alive? only works for local processes, improve this to support several nodes
     
     is_time(job.frequency) and # Is time to run

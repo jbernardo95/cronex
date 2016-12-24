@@ -81,7 +81,7 @@ defmodule Cronex.Table do
     updated_jobs =
       for {id, job} <- state[:jobs], into: %{} do
         updated_job =
-          if job |> can_run do
+          if job |> can_run? do
             job |> run(scheduler.job_supervisor)
           else
             job
