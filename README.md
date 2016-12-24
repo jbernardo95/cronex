@@ -69,7 +69,6 @@ The project documentation can be found [here](https://hexdocs.pm/cronex/api-refe
 
 ## Roadmap
 
-- [ ] Improve overall documentation
 - [ ] Add support to run jobs in different nodes 
 - [ ] More complex every statements (every 3 days, every 4 hours, etc…)
 - [ ] Add test helpers to test jobs/schedulers

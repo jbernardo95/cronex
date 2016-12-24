@@ -14,7 +14,10 @@ defmodule Cronex.Mixfile do
 
      name: "Cronex",
      description: "A cron like system built with elixir",
-     source_url: "https://github.com/jbernardo95/cronex"]
+     source_url: "https://github.com/jbernardo95/cronex",
+     homepage_url: "https://github.com/jbernardo95/cronex",
+     docs: [main: "readme",
+            extras: ["README.md", "CHANGELOG.md"]]]
   end
 
   def application do
