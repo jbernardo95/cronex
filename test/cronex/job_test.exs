@@ -42,6 +42,24 @@ defmodule Cronex.JobTest do
     assert job == %Job{frequency: {0, 10, :*, :*, :*}, task: task}
   end
 
+  describe "validate!/1" do
+    test "returns the given job if the job is valid" do
+      task = fn -> :ok end
+      job = Job.new(:day, "10:00", task) 
+
+      assert job == Job.validate!(job)
+    end
+
+    test "raises invalid frequency error when a job with an invalid frequency is given" do
+      task = fn -> :ok end
+      job = Job.new(:invalid_frequency, task) 
+
+      assert_raise ArgumentError, fn -> 
+        Job.validate!(job) 
+      end
+    end
+  end
+
   test "run/1 returns updated %Job{}", %{job_supervisor: job_supervisor} do
     task = fn -> :ok end
     job = Job.new(:day, task) 

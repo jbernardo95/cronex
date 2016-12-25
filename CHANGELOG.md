@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Support for week days
+- Job validation
 
 ### Improved 
 - Overall project documentation

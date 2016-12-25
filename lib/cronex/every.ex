@@ -33,6 +33,7 @@ defmodule Cronex.Every do
       @doc false
       def unquote(:"job_every_#{frequency}")() do
         Cronex.Job.new(unquote(frequency), fn -> unquote(block) end)
+        |> Cronex.Job.validate!
       end
     end
   end
@@ -63,6 +64,7 @@ defmodule Cronex.Every do
       @doc false
       def unquote(:"job_every_#{frequency}_at_#{time}")() do
         Cronex.Job.new(unquote(frequency), unquote(time), fn -> unquote(block) end)
+        |> Cronex.Job.validate!
       end
     end
   end

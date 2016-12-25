@@ -30,6 +30,18 @@ defmodule Cronex.Job do
   end
 
   @doc"""
+  Validates a given %Job{}.
+
+  Returns the given %Job{} if the job is valid, raises an error if the job is invalid.
+  """
+  def validate!(%Cronex.Job{frequency: frequency} = job) do
+    case frequency do
+      :invalid -> raise_invalid_frequency_error
+      _ -> job
+    end
+  end
+
+  @doc"""
   Runs and updates the pid attribute of a given `%Job{}`.
   """
   def run(%Cronex.Job{task: task} = job, supervisor) do
@@ -45,6 +57,14 @@ defmodule Cronex.Job do
     
     is_time(job.frequency) and # Is time to run
     (job.pid == nil or !Process.alive?(job.pid)) # Job process is dead or non existing 
+  end
+
+  defp raise_invalid_frequency_error do
+    raise ArgumentError, """
+    An invalid frequency was given when creating a job.
+
+    Check the docs to see the accepted frequency arguments. 
+    """
   end
 
   # Every minute job
