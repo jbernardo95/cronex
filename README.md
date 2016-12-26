@@ -2,7 +2,9 @@
 
 [![Travis Build](https://api.travis-ci.org/jbernardo95/cronex.svg?branch=master)](https://travis-ci.org/jbernardo95/cronex/)
 
-A cron like system built with elixir, inspired by [whenever](https://github.com/javan/whenever) ruby gem.
+A cron like system, built in Elixir, that you can mount in your supervision tree.
+
+Cronex's DSL for adding cron jobs is inspired by [whenever](https://github.com/javan/whenever) Ruby gem.
 
 ## Installation
 
