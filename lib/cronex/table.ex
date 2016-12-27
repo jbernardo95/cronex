@@ -101,6 +101,14 @@ defmodule Cronex.Table do
   end
 
   defp ping_timer do
-    Process.send_after(self, :ping, 30000) # 30 sec 
+    Process.send_after(self, :ping, ping_interval)
+  end
+
+  defp ping_interval do
+    case Mix.env do
+      :prod -> 30000
+      :dev -> 30000
+      :test -> 100
+    end
   end
 end

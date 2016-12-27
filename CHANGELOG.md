@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 ### Improved 
 - Overall project documentation
 - `Job.can_run?` tests
+- `Scheduler` tests
 
 ## Version 0.2 - 2016/11/26
 
