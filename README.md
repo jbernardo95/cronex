@@ -65,6 +65,25 @@ end
 
 You can define as much schedulers as you want.
 
+## Testing
+
+Cronex comes with `Cronex.Test` module which provides helpers to test your cron jobs.
+
+```elixir
+defmodule MyApp.SchedulerTest do
+  use ExUnit.Case
+  use Cronex.Test
+
+  test "every hour job is defined in MyApp.Scheduler" do
+    assert_job_every :hour, in: MyApp.Scheduler 
+  end
+
+  test "every day job at 10:00 is defined in MyApp.Scheduler" do
+    assert_job_every :day, at: "10:00", in: MyApp.Scheduler 
+  end
+end
+```
+
 ## Documentation
 
 The project documentation can be found [here](https://hexdocs.pm/cronex/api-reference.html).
@@ -73,7 +92,6 @@ The project documentation can be found [here](https://hexdocs.pm/cronex/api-refe
 
 - [ ] Add support to run jobs in different nodes 
 - [ ] More complex every statements (every 3 days, every 4 hours, etc…)
-- [ ] Add test helpers to test jobs/schedulers
 - [ ] Add support for different time zones
 
 ## Contributing

@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Support for week days
 - Job validation
+- `Cronex.Test` module with test helpers
 
 ### Improved 
 - Overall project documentation

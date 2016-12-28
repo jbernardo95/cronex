@@ -9,7 +9,7 @@ defmodule Cronex.Every do
     end
   end
 
-  @doc"""
+  @doc """
   `Cronex.Every.every/2` macro is used as a simple interface to add a job (without time) to the `Cronex.Table`.
 
   ## Input Arguments
@@ -38,7 +38,7 @@ defmodule Cronex.Every do
     end
   end
 
-  @doc"""
+  @doc """
   `Cronex.Every.every/3` macro is used as a simple interface to add a job (with time) to the `Cronex.Table`.
 
   ## Input Arguments

@@ -1,5 +1,6 @@
 defmodule Cronex.SchedulerTest do
   use ExUnit.Case
+  use Cronex.Test
 
   alias Cronex.Job
   alias Cronex.Test
@@ -37,7 +38,8 @@ defmodule Cronex.SchedulerTest do
   end
 
   test "loads jobs from TestScheduler" do
-    assert %{0 => %Job{}, 1 => %Job{}} = Cronex.Table.get_jobs(TestScheduler.table)
+    assert %{0 => %Job{}, 1 => %Job{}, 2 => %Job{}} = Cronex.Table.get_jobs(TestScheduler.table)
+    assert 3 == (Cronex.Table.get_jobs(TestScheduler.table) |> map_size)
   end
 
   test "TestScheduler starts table and task supervisor" do
@@ -66,5 +68,17 @@ defmodule Cronex.SchedulerTest do
 
     Test.DateTime.set(%Cronex.DateTime{})
     refute_receive {:ok, :every_friday}, @timeout 
+  end
+
+  test "every hour job is defined inside TestScheduler" do
+    assert_job_every :hour, in: TestScheduler
+  end
+
+  test "every day job at 10:00 is defined inside TestScheduler" do
+    assert_job_every :day, at: "10:00", in: TestScheduler 
+  end
+
+  test "every friday job at 12:00 is defined inside TestScheduler" do
+    assert_job_every :day, at: "10:00", in: TestScheduler
   end
 end
