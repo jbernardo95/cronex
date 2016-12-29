@@ -39,7 +39,7 @@ defmodule Cronex do
             # ...
           ]
 
-          supervise(children, strategy: :one_for_one)
+          supervise(children, ...)
         end
 
         # ...

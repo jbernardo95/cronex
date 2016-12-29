@@ -3,7 +3,7 @@ defmodule Cronex.Mixfile do
 
   def project do
     [app: :cronex,
-     version: "0.2.0",
+     version: "0.3.0",
 
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
@@ -13,7 +13,7 @@ defmodule Cronex.Mixfile do
      package: package(),
 
      name: "Cronex",
-     description: "A cron like system built with elixir",
+     description: "A cron like system built in Elixir, that you can mount in your supervision tree",
      source_url: "https://github.com/jbernardo95/cronex",
      homepage_url: "https://github.com/jbernardo95/cronex",
      docs: [main: "readme",

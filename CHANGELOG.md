@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## Version 0.3 - 2016/12/29
+
 ### Added
 - Support for week days
 - Job validation

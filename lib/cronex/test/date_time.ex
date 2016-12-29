@@ -1,5 +1,5 @@
 defmodule Cronex.Test.DateTime do
-  @module """
+  @moduledoc """
   Simple DateTime provider that is static and user manipulated.
   """
 
