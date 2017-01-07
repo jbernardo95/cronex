@@ -11,15 +11,15 @@ defmodule Cronex.SchedulerTest do
     use Cronex.Scheduler
 
     every :hour do
-      send test_process, {:ok, :every_hour}
+      send test_process(), {:ok, :every_hour}
     end
 
     every :day, at: "10:00" do
-      send test_process, {:ok, :every_day}
+      send test_process(), {:ok, :every_day}
     end
 
     every :friday, at: "12:00" do
-      send test_process, {:ok, :every_friday}
+      send test_process(), {:ok, :every_friday}
     end
 
     defp test_process do
@@ -33,7 +33,7 @@ defmodule Cronex.SchedulerTest do
   end
 
   setup do
-    Application.put_env(:cronex, :test_process, self)
+    Application.put_env(:cronex, :test_process, self())
   end
 
   test "loads jobs from TestScheduler" do

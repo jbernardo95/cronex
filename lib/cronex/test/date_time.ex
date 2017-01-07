@@ -25,5 +25,5 @@ defmodule Cronex.Test.DateTime do
   @doc """
   An alias for the `get/0` function, to mimic the `DateTime` module behaviour.
   """
-  def utc_now, do: get
+  def utc_now, do: get()
 end

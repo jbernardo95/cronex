@@ -36,7 +36,7 @@ defmodule Cronex.Job do
   """
   def validate!(%Cronex.Job{frequency: frequency} = job) do
     case frequency do
-      :invalid -> raise_invalid_frequency_error
+      :invalid -> raise_invalid_frequency_error()
       _ -> job
     end
   end
@@ -72,30 +72,30 @@ defmodule Cronex.Job do
 
   # Every hour job, check minute of job
   defp is_time({minute, :*, :*, :*, :*}) do
-    current_date_time.minute == minute
+    current_date_time().minute == minute
   end
 
   # Every day job, check time of job
   defp is_time({minute, hour, :*, :*, :*}) do
-    current_date_time.minute == minute and current_date_time.hour == hour
+    current_date_time().minute == minute and current_date_time().hour == hour
   end
 
   # Every week job, check time and day of the week
   defp is_time({minute, hour, :*, :*, day_week}) do
-    current_date_time.minute == minute and current_date_time.hour == hour and Date.day_of_week(current_date_time) == day_week
+    current_date_time().minute == minute and current_date_time().hour == hour and Date.day_of_week(current_date_time()) == day_week
   end
 
   # Every month job, check day and time of job
   defp is_time({minute, hour, day, :*, :*}) do
-    current_date_time.minute == minute and current_date_time.hour == hour and current_date_time.day == day
+    current_date_time().minute == minute and current_date_time().hour == hour and current_date_time().day == day
   end
 
   # Every year job, check month, day and time of job
   defp is_time({minute, hour, day, month, :*}) do
-    current_date_time.minute == minute and 
-    current_date_time.hour == hour and
-    current_date_time.day == day and
-    current_date_time.month == month
+    current_date_time().minute == minute and 
+    current_date_time().hour == hour and
+    current_date_time().day == day and
+    current_date_time().month == month
   end
 
   defp is_time(_frequency), do: false

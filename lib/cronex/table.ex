@@ -41,11 +41,11 @@ defmodule Cronex.Table do
 
   # Callback functions
   def init(args) do
-    GenServer.cast(self, :init)
+    GenServer.cast(self(), :init)
 
     state = %{scheduler: args[:scheduler],
               jobs: Map.new,
-              timer: ping_timer}
+              timer: new_ping_timer()}
 
     {:ok, state}
   end
@@ -76,7 +76,7 @@ defmodule Cronex.Table do
   end
 
   def handle_info(:ping, %{scheduler: scheduler} = state) do
-    updated_timer = ping_timer
+    updated_timer = new_ping_timer()
 
     updated_jobs =
       for {id, job} <- state[:jobs], into: %{} do
@@ -100,8 +100,8 @@ defmodule Cronex.Table do
     put_in(state, [:jobs, index], job)
   end
 
-  defp ping_timer do
-    Process.send_after(self, :ping, ping_interval)
+  defp new_ping_timer() do
+    Process.send_after(self(), :ping, ping_interval())
   end
 
   defp ping_interval do
