@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- Minimum Elixir version is now 1.4
+
+### Removed
+- `Cronex.DateTime` module 
+
 ## Version 0.3 - 2016/12/29
 
 ### Added
