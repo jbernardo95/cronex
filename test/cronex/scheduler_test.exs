@@ -34,7 +34,6 @@ defmodule Cronex.SchedulerTest do
 
   setup do
     Application.put_env(:cronex, :test_process, self)
-    Test.DateTime.set(%Cronex.DateTime{minute: 1})
   end
 
   test "loads jobs from TestScheduler" do
@@ -47,26 +46,27 @@ defmodule Cronex.SchedulerTest do
   end
 
   test "every hour job runs on the expected time" do
-    Test.DateTime.set(%Cronex.DateTime{minute: 0})
+    Test.DateTime.set(minute: 0)
     assert_receive {:ok, :every_hour}, @timeout 
 
-    Test.DateTime.set(%Cronex.DateTime{minute: 1})
+    Test.DateTime.set(minute: 1)
     refute_receive {:ok, :every_hour}, @timeout 
   end
 
   test "every day job runs on the expected time" do
-    Test.DateTime.set(%Cronex.DateTime{hour: 10, minute: 0})
+    Test.DateTime.set(hour: 10, minute: 0)
     assert_receive {:ok, :every_day}, @timeout 
 
-    Test.DateTime.set(%Cronex.DateTime{})
+    Test.DateTime.set(hour: 11)
     refute_receive {:ok, :every_day}, @timeout 
   end
 
   test "every friday job runs on the expected time" do
-    Test.DateTime.set(%Cronex.DateTime{day_of_week: 5, hour: 12})
+    # day_of_week == 5
+    Test.DateTime.set(year: 2017, month: 1, day: 6, hour: 12, minute: 0)
     assert_receive {:ok, :every_friday}, @timeout 
 
-    Test.DateTime.set(%Cronex.DateTime{})
+    Test.DateTime.set(hour: 13)
     refute_receive {:ok, :every_friday}, @timeout 
   end
 

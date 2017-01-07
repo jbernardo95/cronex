@@ -61,10 +61,10 @@ defmodule Cronex.JobTest do
     task = fn -> :ok end
     job = Job.new(:hour, task) 
 
-    Test.DateTime.set(%Cronex.DateTime{minute: 0})
+    Test.DateTime.set(minute: 0)
     assert true == Cronex.Job.can_run?(job)
 
-    Test.DateTime.set(%Cronex.DateTime{minute: 1})
+    Test.DateTime.set(minute: 1)
     assert false == Cronex.Job.can_run?(job)
   end
 
@@ -72,16 +72,16 @@ defmodule Cronex.JobTest do
     task = fn -> :ok end
     job = Job.new(:day, task) 
 
-    Test.DateTime.set(%Cronex.DateTime{hour: 0, minute: 0})
+    Test.DateTime.set(hour: 0, minute: 0)
     assert true == Cronex.Job.can_run?(job)
 
-    Test.DateTime.set(%Cronex.DateTime{hour: 0, minute: 1})
+    Test.DateTime.set(hour: 0, minute: 1)
     assert false == Cronex.Job.can_run?(job)
 
-    Test.DateTime.set(%Cronex.DateTime{hour: 1, minute: 0})
+    Test.DateTime.set(hour: 1, minute: 0)
     assert false == Cronex.Job.can_run?(job)
 
-    Test.DateTime.set(%Cronex.DateTime{hour: 1, minute: 1})
+    Test.DateTime.set(hour: 1, minute: 1)
     assert false == Cronex.Job.can_run?(job)
   end
 
@@ -89,13 +89,16 @@ defmodule Cronex.JobTest do
     task = fn -> :ok end
     job = Job.new(:wednesday, task) 
 
-    Test.DateTime.set(%Cronex.DateTime{day_of_week: 3, hour: 0, minute: 0})
+    # day_of_week == 3
+    Test.DateTime.set(year: 2017, month: 1, day: 4, hour: 0, minute: 0)
     assert true == Cronex.Job.can_run?(job)
 
-    Test.DateTime.set(%Cronex.DateTime{day_of_week: 1, hour: 0, minute: 0})
+    # day_of_week == 1
+    Test.DateTime.set(year: 2017, month: 1, day: 2, hour: 0, minute: 0)
     assert false == Cronex.Job.can_run?(job)
 
-    Test.DateTime.set(%Cronex.DateTime{day_of_week: 3, hour: 1, minute: 0})
+    # day_of_week == 3
+    Test.DateTime.set(year: 2017, month: 1, day: 4, hour: 1, minute: 0)
     assert false == Cronex.Job.can_run?(job)
   end
 
@@ -103,13 +106,13 @@ defmodule Cronex.JobTest do
     task = fn -> :ok end
     job = Job.new(:month, task) 
 
-    Test.DateTime.set(%Cronex.DateTime{day: 1, hour: 0, minute: 0})
+    Test.DateTime.set(day: 1, hour: 0, minute: 0)
     assert true == Cronex.Job.can_run?(job)
 
-    Test.DateTime.set(%Cronex.DateTime{day: 2, hour: 0, minute: 0})
+    Test.DateTime.set(day: 2, hour: 0, minute: 0)
     assert false == Cronex.Job.can_run?(job)
 
-    Test.DateTime.set(%Cronex.DateTime{day: 1, hour: 1, minute: 0})
+    Test.DateTime.set(day: 1, hour: 1, minute: 0)
     assert false == Cronex.Job.can_run?(job)
   end
 
@@ -117,13 +120,13 @@ defmodule Cronex.JobTest do
     task = fn -> :ok end
     job = Job.new(:year, task) 
 
-    Test.DateTime.set(%Cronex.DateTime{month: 1, day: 1, hour: 0, minute: 0})
+    Test.DateTime.set(month: 1, day: 1, hour: 0, minute: 0)
     assert true == Cronex.Job.can_run?(job)
 
-    Test.DateTime.set(%Cronex.DateTime{month: 2, day: 1, hour: 0, minute: 0})
+    Test.DateTime.set(month: 2, day: 1, hour: 0, minute: 0)
     assert false == Cronex.Job.can_run?(job)
 
-    Test.DateTime.set(%Cronex.DateTime{month: 1, day: 2, hour: 0, minute: 0})
+    Test.DateTime.set(month: 1, day: 2, hour: 0, minute: 0)
     assert false == Cronex.Job.can_run?(job)
   end
 end
