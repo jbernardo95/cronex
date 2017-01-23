@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added 
+- Support for interval time based jobs
+
 ### Changed
 - Minimum Elixir version is now 1.4
 

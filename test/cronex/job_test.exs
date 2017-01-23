@@ -16,11 +16,29 @@ defmodule Cronex.JobTest do
     assert job == %Job{frequency: {0, 0, :*, :*, :*}, task: task}
   end
 
-  test "new/3 returns a %Job{}" do
+  test "new/3 regular returns a %Job{}" do
     task = fn -> :ok end
     job = Job.new(:day, "10:00", task) 
 
     assert job == %Job{frequency: {0, 10, :*, :*, :*}, task: task}
+  end
+
+  test "new/3 interval returns a %Job{}" do
+    task = fn -> :ok end
+    job = Job.new(2, :hour, task) 
+
+    assert %Job{frequency: {0, interval, :*, :*, :*}, task: t} = job
+    assert t == task 
+    assert is_function(interval)
+  end
+
+  test "new/4 returns a %Job{}" do
+    task = fn -> :ok end
+    job = Job.new(2, :day, "10:30", task) 
+
+    assert %Job{frequency: {30, 10, interval, :*, :*}, task: t} = job
+    assert t == task 
+    assert is_function(interval)
   end
 
   describe "validate!/1" do
@@ -57,6 +75,20 @@ defmodule Cronex.JobTest do
     assert true == Cronex.Job.can_run?(job)
   end
 
+  test "can_run?/1 with an every interval minute job" do
+    task = fn -> :ok end
+    job = Job.new(2, :minute, task) 
+
+    Test.DateTime.set(minute: 0)
+    assert true == Cronex.Job.can_run?(job)
+
+    Test.DateTime.set(minute: 1)
+    assert false == Cronex.Job.can_run?(job)
+
+    Test.DateTime.set(minute: 2)
+    assert true == Cronex.Job.can_run?(job)
+  end
+
   test "can_run?/1 with an every hour job" do
     task = fn -> :ok end
     job = Job.new(:hour, task) 
@@ -66,6 +98,20 @@ defmodule Cronex.JobTest do
 
     Test.DateTime.set(minute: 1)
     assert false == Cronex.Job.can_run?(job)
+  end
+
+  test "can_run?/1 with an every interval hour job" do
+    task = fn -> :ok end
+    job = Job.new(2, :hour, task) 
+
+    Test.DateTime.set(hour: 0, minute: 0)
+    assert true == Cronex.Job.can_run?(job)
+
+    Test.DateTime.set(hour: 1)
+    assert false == Cronex.Job.can_run?(job)
+
+    Test.DateTime.set(hour: 2)
+    assert true == Cronex.Job.can_run?(job)
   end
 
   test "can_run?/1 with an every day job" do
@@ -83,6 +129,20 @@ defmodule Cronex.JobTest do
 
     Test.DateTime.set(hour: 1, minute: 1)
     assert false == Cronex.Job.can_run?(job)
+  end
+
+  test "can_run?/1 with an every interval day job" do
+    task = fn -> :ok end
+    job = Job.new(2, :day, task) 
+
+    Test.DateTime.set(day: 1, hour: 0, minute: 0)
+    assert true == Cronex.Job.can_run?(job)
+
+    Test.DateTime.set(day: 2)
+    assert false == Cronex.Job.can_run?(job)
+
+    Test.DateTime.set(day: 3)
+    assert true == Cronex.Job.can_run?(job)
   end
 
   test "can_run?/1 with an every week day job" do
@@ -114,6 +174,20 @@ defmodule Cronex.JobTest do
 
     Test.DateTime.set(day: 1, hour: 1, minute: 0)
     assert false == Cronex.Job.can_run?(job)
+  end
+
+  test "can_run?/1 with an every interval month job" do
+    task = fn -> :ok end
+    job = Job.new(2, :month, task) 
+
+    Test.DateTime.set(month: 1, day: 1, hour: 0, minute: 0)
+    assert true == Cronex.Job.can_run?(job)
+
+    Test.DateTime.set(month: 2)
+    assert false == Cronex.Job.can_run?(job)
+
+    Test.DateTime.set(month: 3)
+    assert true == Cronex.Job.can_run?(job)
   end
 
   test "can_run?/1 with an every year job" do

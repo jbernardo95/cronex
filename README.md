@@ -90,9 +90,8 @@ The project documentation can be found [here](https://hexdocs.pm/cronex/api-refe
 
 ## Roadmap
 
-- [ ] Add support to run jobs in different nodes 
-- [ ] More complex every statements (every 3 days, every 4 hours, etc…)
 - [ ] Add support for different time zones
+- [ ] Improve multi node support and control 
 
 ## Contributing
 

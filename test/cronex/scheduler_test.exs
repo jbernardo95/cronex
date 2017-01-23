@@ -22,6 +22,14 @@ defmodule Cronex.SchedulerTest do
       send test_process(), {:ok, :every_friday}
     end
 
+    every 2, :hour do
+      send test_process(), {:ok, :every_2_hour}
+    end
+
+    every 3, :day, at: "15:30" do
+      send test_process(), {:ok, :every_3_day}
+    end
+
     defp test_process do
       Application.get_env(:cronex, :test_process)
     end
@@ -38,7 +46,7 @@ defmodule Cronex.SchedulerTest do
 
   test "loads jobs from TestScheduler" do
     assert %{0 => %Job{}, 1 => %Job{}, 2 => %Job{}} = Cronex.Table.get_jobs(TestScheduler.table)
-    assert 3 == (Cronex.Table.get_jobs(TestScheduler.table) |> map_size)
+    assert 5 == (Cronex.Table.get_jobs(TestScheduler.table) |> map_size)
   end
 
   test "TestScheduler starts table and task supervisor" do
@@ -70,6 +78,31 @@ defmodule Cronex.SchedulerTest do
     refute_receive {:ok, :every_friday}, @timeout 
   end
 
+  test "every 2 hour job runs on the expected time" do
+    Test.DateTime.set(hour: 0, minute: 0)
+    assert_receive {:ok, :every_2_hour}, @timeout 
+
+    Test.DateTime.set(hour: 1)
+    refute_receive {:ok, :every_2_hour}, @timeout 
+
+    Test.DateTime.set(hour: 2)
+    assert_receive {:ok, :every_2_hour}, @timeout 
+  end
+
+  test "every 3 day job runs on the expected time" do
+    Test.DateTime.set(day: 1, hour: 15, minute: 30)
+    assert_receive {:ok, :every_3_day}, @timeout 
+
+    Test.DateTime.set(day: 2)
+    refute_receive {:ok, :every_3_day}, @timeout 
+
+    Test.DateTime.set(day: 4)
+    assert_receive {:ok, :every_3_day}, @timeout 
+
+    Test.DateTime.set(hour: 16)
+    refute_receive {:ok, :every_3_day}, @timeout 
+  end
+
   test "every hour job is defined inside TestScheduler" do
     assert_job_every :hour, in: TestScheduler
   end
@@ -80,5 +113,13 @@ defmodule Cronex.SchedulerTest do
 
   test "every friday job at 12:00 is defined inside TestScheduler" do
     assert_job_every :day, at: "10:00", in: TestScheduler
+  end
+
+  test "every 2 hour job is defined inside TestScheduler" do
+    assert_job_every 2, :hour, in: TestScheduler
+  end
+
+  test "every 3 day job at 15:30 is defined inside TestScheduler" do
+    assert_job_every 3, :day, at: "15:30", in: TestScheduler
   end
 end
