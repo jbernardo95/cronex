@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## Version 0.4 - 2017/02/10
+
 ### Added 
 - Support for interval time based jobs
 
