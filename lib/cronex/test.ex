@@ -3,6 +3,10 @@ defmodule Cronex.Test do
   This module defines helpers for testing cron jobs definition.
   """
 
+  alias Cronex.Job
+  alias Cronex.Table
+  alias Cronex.Parser
+
   defmacro __using__(_opts) do
     quote do
       import Cronex.Test
@@ -34,13 +38,19 @@ defmodule Cronex.Test do
     scheduler = Keyword.get(opts, :in)
     count = Keyword.get(opts, :count, 1)
 
-    quote bind_quoted: [frequency: frequency, time: time, scheduler: scheduler, count: count] do
-      assert count == Cronex.Table.get_jobs(scheduler.table)
-        |> Map.values
-        |> Enum.count(fn(%Cronex.Job{frequency: job_frequency}) ->
-          job_frequency == Cronex.Parser.parse_regular_frequency(frequency, time)
-        end)
+    quote bind_quoted: [scheduler: scheduler, frequency: frequency, time: time, count: count] do
+      assert count == Cronex.Test.find_jobs_by_frequency(scheduler.table, frequency, time)
     end
+  end
+
+  @doc false
+  def find_jobs_by_frequency(table, frequency, time) do
+    table
+    |> Table.get_jobs
+    |> Map.values
+    |> Enum.count(fn(%Job{frequency: job_frequency}) ->
+      job_frequency == Parser.parse_regular_frequency(frequency, time)
+    end)
   end
 
   @doc """
@@ -68,12 +78,18 @@ defmodule Cronex.Test do
     scheduler = Keyword.get(opts, :in)
     count = Keyword.get(opts, :count, 1)
 
-    quote bind_quoted: [interval: interval, frequency: frequency, time: time, scheduler: scheduler, count: count] do
-      assert count == Cronex.Table.get_jobs(scheduler.table)
-        |> Map.values
-        |> Enum.count(fn(%Cronex.Job{frequency: job_frequency}) ->
-          job_frequency == Cronex.Parser.parse_interval_frequency(interval, frequency, time)
-        end)
+    quote bind_quoted: [scheduler: scheduler, interval: interval, frequency: frequency, time: time, count: count] do
+      assert count == Cronex.Test.find_jobs_by_frequency(scheduler.table, interval, frequency, time)
     end
+  end
+
+  @doc false
+  def find_jobs_by_frequency(table, interval, frequency, time) do
+    table
+    |> Table.get_jobs
+    |> Map.values
+    |> Enum.count(fn(%Job{frequency: job_frequency}) ->
+      job_frequency == Parser.parse_interval_frequency(interval, frequency, time)
+    end)
   end
 end
