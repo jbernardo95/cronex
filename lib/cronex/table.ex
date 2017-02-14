@@ -10,6 +10,11 @@ defmodule Cronex.Table do
   alias Cronex.Job
 
   # Interface functions
+  @doc """
+  Starts a `Cronex.Table` instance.
+
+  `args` must contain a `:scheduler` with a valid `Cronex.Scheduler`.
+  """
   def start_link(args, opts \\ []) do
     GenServer.start_link(__MODULE__, args, opts)
   end
@@ -26,6 +31,8 @@ defmodule Cronex.Table do
 
   # Callback functions
   def init(args) do
+    if is_nil(args[:scheduler]), do: raise_scheduler_not_provided_error() 
+
     GenServer.cast(self(), :init)
 
     state = %{scheduler: args[:scheduler],
@@ -35,7 +42,6 @@ defmodule Cronex.Table do
     {:ok, state}
   end
 
-  def handle_cast(:init, %{scheduler: nil} = state), do: {:noreply, state} 
   def handle_cast(:init, %{scheduler: scheduler} = state) do
     new_state =
       scheduler.__info__(:functions)
@@ -80,6 +86,16 @@ defmodule Cronex.Table do
   end
 
   # Private functions
+  defp raise_scheduler_not_provided_error do
+    raise ArgumentError, message: """
+    No scheduler was provided when starting Cronex.Table.
+
+    Please provide a Scheduler like so:
+
+        Cronex.Table.start_link(scheduler: MyApp.Scheduler)
+    """
+  end
+
   defp do_add_job(state, %Job{} = job) do
     index = state[:jobs] |> Map.keys |> Enum.count 
     put_in(state, [:jobs, index], job)

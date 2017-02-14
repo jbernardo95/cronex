@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- Starting a `Cronex.Table` always requires a valid `Cronex.Scheduler` 
+
+### Improved 
+- `Cronex.Table` documentation
+
 ## Version 0.4 - 2017/02/10
 
 ### Added 
