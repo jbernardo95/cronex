@@ -5,36 +5,21 @@ defmodule Cronex.Table do
 
   use GenServer
 
-  alias Cronex.Job
   import Cronex.Job
+
+  alias Cronex.Job
 
   # Interface functions
   def start_link(args, opts \\ []) do
     GenServer.start_link(__MODULE__, args, opts)
   end
 
-  @doc"""
-  Adds a `%Cronex.Job{}` to the cronex table.
-
-  ## Example
-  
-      iex> task = fn -> IO.puts("Task") end
-      iex> job = Cronex.Job.new(:day, task) 
-      iex> Cronex.Table.add_job(table_pid, job)
-      :ok
-  """
+  @doc false
   def add_job(pid, %Job{} = job) do
     GenServer.call(pid, {:add_job, job})
   end
 
-  @doc"""
-  Returns a map of the jobs on the cronex table.
-
-  ## Example
-  
-      iex> Cronex.Table.get_jobs(table_pid)
-      %{0 => %Cronex.Job{...}}
-  """
+  @doc false
   def get_jobs(pid) do
     GenServer.call(pid, :get_jobs)
   end
