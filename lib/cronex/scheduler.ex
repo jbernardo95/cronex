@@ -10,6 +10,10 @@ defmodule Cronex.Scheduler do
       use Supervisor
       use Cronex.Every
 
+      Module.register_attribute(__MODULE__, :jobs, accumulate: true)
+
+      @before_compile unquote(__MODULE__)
+
       def start_link do
         Supervisor.start_link(__MODULE__, nil, name: __MODULE__)
       end
@@ -32,6 +36,14 @@ defmodule Cronex.Scheduler do
       @doc false
       def table do
         :"#{__MODULE__}.Table" 
+      end
+    end
+  end
+
+  defmacro __before_compile__(_opts) do
+    quote do
+      def jobs do
+        @jobs
       end
     end
   end

@@ -44,14 +44,10 @@ defmodule Cronex.Table do
 
   def handle_cast(:init, %{scheduler: scheduler} = state) do
     new_state =
-      scheduler.__info__(:functions)
-      |> Enum.reduce(state, fn({function, _arity}, state) ->
-        if Atom.to_string(function) =~ "job_every_" do
-          job = apply(scheduler, function, [])
-          state |> do_add_job(job)
-        else
-          state
-        end
+      scheduler.jobs
+      |> Enum.reduce(state, fn(job, state) ->
+        job = apply(scheduler, job, [])
+        do_add_job(state, job)
       end)
 
     {:noreply, new_state}

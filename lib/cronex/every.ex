@@ -30,10 +30,16 @@ defmodule Cronex.Every do
   """
   defmacro every(frequency, [do: block] = _job)
     when is_atom(frequency) do
+    job_name = String.to_atom("job_every_#{frequency}")
     quote do
+      @jobs unquote(job_name)
+
       @doc false
-      def unquote(:"job_every_#{frequency}")() do
-        Cronex.Job.new(unquote(frequency), fn -> unquote(block) end)
+      def unquote(job_name)() do
+        Cronex.Job.new(
+          unquote(frequency),
+          fn -> unquote(block) end
+        )
         |> Cronex.Job.validate!
       end
     end
@@ -78,10 +84,17 @@ defmodule Cronex.Every do
   """
   defmacro every(arg1, [at: time] = _arg2, [do: block] = _job)
     when is_atom(arg1) and is_bitstring(time) do
+    job_name = String.to_atom("job_every_#{arg1}_at_#{time}")
     quote do
+      @jobs unquote(job_name)
+
       @doc false
-      def unquote(:"job_every_#{arg1}_at_#{time}")() do
-        Cronex.Job.new(unquote(arg1), unquote(time), fn -> unquote(block) end)
+      def unquote(job_name)() do
+        Cronex.Job.new(
+          unquote(arg1),
+          unquote(time),
+          fn -> unquote(block) end
+        )
         |> Cronex.Job.validate!
       end
     end
@@ -89,10 +102,17 @@ defmodule Cronex.Every do
 
   defmacro every(arg1, arg2, [do: block] = _job)
     when is_integer(arg1) and is_atom(arg2) do
+    job_name = String.to_atom("job_every_#{arg1}_#{arg2}")
     quote do
+      @jobs unquote(job_name)
+
       @doc false
-      def unquote(:"job_every_#{arg1}_#{arg2}")() do
-        Cronex.Job.new(unquote(arg1), unquote(arg2), fn -> unquote(block) end)
+      def unquote(job_name)() do
+        Cronex.Job.new(
+          unquote(arg1),
+          unquote(arg2),
+          fn -> unquote(block) end
+        )
         |> Cronex.Job.validate!
       end
     end
@@ -123,10 +143,18 @@ defmodule Cronex.Every do
   """
   defmacro every(interval, frequency, [at: time] = _at, [do: block] = _job)
     when is_integer(interval) and is_atom(frequency) do
+    job_name = String.to_atom("job_every_#{interval}_#{frequency}_at_#{time}")
     quote do
+      @jobs unquote(job_name)
+
       @doc false
-      def unquote(:"job_every_#{interval}_#{frequency}_at_#{time}")() do
-        Cronex.Job.new(unquote(interval), unquote(frequency), unquote(time), fn -> unquote(block) end)
+      def unquote(job_name)() do
+        Cronex.Job.new(
+          unquote(interval),
+          unquote(frequency),
+          unquote(time), 
+          fn -> unquote(block) end
+        )
         |> Cronex.Job.validate!
       end
     end
