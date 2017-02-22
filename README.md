@@ -90,6 +90,7 @@ The project documentation can be found [here](https://hexdocs.pm/cronex/api-refe
 
 ## Roadmap
 
+- [ ] Add logging 
 - [ ] Add support for different time zones
 - [ ] Improve multi node support and control 
 

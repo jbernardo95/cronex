@@ -8,7 +8,8 @@ defmodule Cronex.Scheduler do
   defmacro __using__(_opts) do
     quote do
       use Supervisor
-      use Cronex.Every
+
+      import Cronex.Every
 
       Module.register_attribute(__MODULE__, :jobs, accumulate: true)
 

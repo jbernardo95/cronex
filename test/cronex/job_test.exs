@@ -4,11 +4,6 @@ defmodule Cronex.JobTest do
   alias Cronex.Job
   alias Cronex.Test
 
-  setup do
-    {:ok, job_supervisor} = Task.Supervisor.start_link 
-    {:ok, job_supervisor: job_supervisor}
-  end
-
   test "new/2 returns a %Job{}" do
     task = fn -> :ok end
     job = Job.new(:day, task) 
@@ -59,7 +54,9 @@ defmodule Cronex.JobTest do
     end
   end
 
-  test "run/1 returns updated %Job{}", %{job_supervisor: job_supervisor} do
+  test "run/1 returns updated %Job{}" do
+    {:ok, job_supervisor} = Task.Supervisor.start_link 
+
     task = fn -> :ok end
     job = Job.new(:day, task) 
 
