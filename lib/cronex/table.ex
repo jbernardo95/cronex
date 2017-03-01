@@ -37,18 +37,23 @@ defmodule Cronex.Table do
 
     state = %{scheduler: args[:scheduler],
               jobs: Map.new,
-              timer: new_ping_timer()}
+              timer: new_ping_timer(),
+              leader: false}
 
     {:ok, state}
   end
 
   def handle_cast(:init, %{scheduler: scheduler} = state) do
+    # Load jobs
     new_state =
       scheduler.jobs
       |> Enum.reduce(state, fn(job, state) ->
         job = apply(scheduler, job, [])
         do_add_job(state, job)
       end)
+
+    # Try to become leader
+    new_state = try_become_leader(new_state)
 
     {:noreply, new_state}
   end
@@ -62,6 +67,11 @@ defmodule Cronex.Table do
     {:reply, state[:jobs], state}
   end
 
+  def handle_call(:new_leader, _from, state) do
+    {:reply, :ok, Map.put(state, :leader, false)}
+  end
+
+  def handle_info(:ping, %{leader: false} = state), do: {:noreply, state}
   def handle_info(:ping, %{scheduler: scheduler} = state) do
     updated_timer = new_ping_timer()
 
@@ -81,7 +91,6 @@ defmodule Cronex.Table do
     {:noreply, new_state}
   end
 
-  # Private functions
   defp raise_scheduler_not_provided_error do
     raise ArgumentError, message: """
     No scheduler was provided when starting Cronex.Table.
@@ -90,6 +99,25 @@ defmodule Cronex.Table do
 
         Cronex.Table.start_link(scheduler: MyApp.Scheduler)
     """
+  end
+
+  defp try_become_leader(%{scheduler: scheduler} = state) do
+    trans_result = :global.trans(
+      {:leader, self()},
+      fn -> 
+        case GenServer.multi_call(Node.list, scheduler.table, :new_leader) do
+          {_, []} -> :ok
+          _ -> :aborted 
+        end
+      end,
+      Node.list([:this, :visible]),
+      0
+    )
+
+    case trans_result do
+      :ok -> Map.put(state, :leader, true)
+      :aborted -> Map.put(state, :leader, false)
+    end
   end
 
   defp do_add_job(state, %Job{} = job) do
