@@ -1,7 +1,11 @@
 # Change log
+
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+### Fixed
+- Dependency on `Miv.env` that is not available in production (#4)
 
 ### Changed
 - Starting a `Cronex.Table` always requires a valid `Cronex.Scheduler` 

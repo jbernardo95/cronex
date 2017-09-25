@@ -130,10 +130,6 @@ defmodule Cronex.Table do
   end
 
   defp ping_interval do
-    case Mix.env do
-      :prod -> 30000
-      :dev -> 30000
-      :test -> 100
-    end
+    Application.get_env(:cronex, :ping_interval, 30000)
   end
 end
