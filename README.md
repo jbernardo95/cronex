@@ -88,12 +88,6 @@ end
 
 The project documentation can be found [here](https://hexdocs.pm/cronex/api-reference.html).
 
-## Roadmap
-
-- [ ] Add logging 
-- [ ] Add support for different time zones
-- [ ] Improve multi node support and control 
-
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/jbernardo95/cronex.
