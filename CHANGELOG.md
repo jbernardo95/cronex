@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Starting a `Cronex.Table` always requires a valid `Cronex.Scheduler` 
+- Minimum Elixir version is now 1.5.2
 
 ### Improved 
 - `Cronex.Table` documentation
