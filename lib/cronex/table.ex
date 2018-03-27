@@ -130,6 +130,6 @@ defmodule Cronex.Table do
   end
 
   defp ping_interval do
-    Application.get_env(:cronex, :ping_interval, 30000)
+    Application.get_env(:cronex, :ping_interval, 60000)
   end
 end
