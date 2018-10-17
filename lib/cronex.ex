@@ -3,7 +3,7 @@ defmodule Cronex do
   This is Cronex main module.
 
   ## Getting started
-  
+
   Cronex makes it really easy and intuitive to schedule cron like jobs.
 
   You use the `Cronex.Scheduler` module to define a scheduler and add jobs to it.

@@ -11,15 +11,15 @@ defmodule Cronex.Test.DateTime do
   Sets the DateTime value of the provider.
   """
   def set(args) when is_list(args) do
-    args_map = Enum.into(args, Map.new)
-    Agent.update(__MODULE__, fn(date_time) -> Map.merge(date_time, args_map) end)
+    args_map = Enum.into(args, Map.new())
+    Agent.update(__MODULE__, fn date_time -> Map.merge(date_time, args_map) end)
   end
 
   @doc """
   Gets the current DateTime value of the provider.
   """
   def get do
-    Agent.get(__MODULE__, &(&1))
+    Agent.get(__MODULE__, & &1)
   end
 
   @doc """

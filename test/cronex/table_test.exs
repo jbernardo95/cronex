@@ -4,7 +4,7 @@ defmodule Cronex.TableTest do
 
   alias Cronex.Job
 
-  defmodule TestScheduler, do: use Cronex.Scheduler
+  defmodule(TestScheduler, do: use(Cronex.Scheduler))
 
   setup do
     Process.flag(:trap_exit, true)
@@ -17,13 +17,13 @@ defmodule Cronex.TableTest do
       Cronex.Table.start_link(nil)
 
       assert_receive {:EXIT, _from, reason}
-      assert %ArgumentError{message: message} = elem(reason, 0) 
+      assert %ArgumentError{message: message} = elem(reason, 0)
       assert message =~ "No scheduler was provided"
 
       Cronex.Table.start_link(scheduler: nil)
 
       assert_receive {:EXIT, _from, reason}
-      assert %ArgumentError{message: message} = elem(reason, 0) 
+      assert %ArgumentError{message: message} = elem(reason, 0)
       assert message =~ "No scheduler was provided"
     end
   end
@@ -31,7 +31,7 @@ defmodule Cronex.TableTest do
   describe "add_job/2" do
     test "returns :ok", %{table: table} do
       task = fn -> IO.puts("Task") end
-      job = Cronex.Job.new(:day, task) 
+      job = Cronex.Job.new(:day, task)
 
       assert :ok == Cronex.Table.add_job(table, job)
     end
@@ -44,7 +44,7 @@ defmodule Cronex.TableTest do
 
     test "with one job returns %{0 => %Job{}}", %{table: table} do
       task = fn -> :ok end
-      job = Job.new(:day, task) 
+      job = Job.new(:day, task)
 
       assert :ok == Cronex.Table.add_job(table, job)
 

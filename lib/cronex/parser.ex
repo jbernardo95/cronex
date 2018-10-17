@@ -1,5 +1,5 @@
 defmodule Cronex.Parser do
-  @moduledoc"""
+  @moduledoc """
   This modules is responsible for time parsing.
   """
 
@@ -34,6 +34,7 @@ defmodule Cronex.Parser do
   end
 
   defp do_parse_regular_frequency(_, :invalid), do: :invalid
+
   defp do_parse_regular_frequency(frequency, {hour, minute}) do
     cond do
       frequency == :minute ->
@@ -55,7 +56,8 @@ defmodule Cronex.Parser do
         day_of_week = Enum.find_index(@days_of_week, &(&1 == frequency)) + 1
         {minute, hour, :*, :*, day_of_week}
 
-      true -> :invalid 
+      true ->
+        :invalid
     end
   end
 
@@ -72,14 +74,16 @@ defmodule Cronex.Parser do
       iex> Cronex.Parser.parse_interval_frequency(2, :invalid_day)
       :invalid
   """
-  def parse_interval_frequency(interval, frequency, time \\ "00:00") do 
+  def parse_interval_frequency(interval, frequency, time \\ "00:00") do
     parsed_time = parse_time(time)
     do_parse_interval_frequency(interval, frequency, parsed_time)
   end
 
   defp do_parse_interval_frequency(_, _, :invalid), do: :invalid
+
   defp do_parse_interval_frequency(interval, frequency, {hour, minute}) do
-    interval_fn = fn(arg) -> rem(arg, interval) end 
+    interval_fn = fn arg -> rem(arg, interval) end
+
     cond do
       frequency == :minute ->
         {interval_fn, :*, :*, :*, :*}
@@ -93,16 +97,17 @@ defmodule Cronex.Parser do
       frequency == :month ->
         {minute, hour, 1, interval_fn, :*}
 
-      true -> :invalid 
+      true ->
+        :invalid
     end
   end
 
   defp parse_time(time) when is_bitstring(time) do
     try do
-      time 
+      time
       |> String.split(":")
       |> Enum.map(&String.to_integer/1)
-      |> List.to_tuple
+      |> List.to_tuple()
     rescue
       _ -> :invalid
     end
