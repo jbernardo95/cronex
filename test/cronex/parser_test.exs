@@ -11,7 +11,9 @@ defmodule Cronex.ParserTest do
   end
 
   test "parse_interval_frequency/3" do
-    assert {10, 12, interval_fn, :*, :*} = Cronex.Parser.parse_interval_frequency(4, :day, "12:10")
+    assert {10, 12, interval_fn, :*, :*} =
+             Cronex.Parser.parse_interval_frequency(4, :day, "12:10")
+
     assert 0 == interval_fn.(0)
     assert 0 == interval_fn.(4)
     assert 0 == interval_fn.(8)

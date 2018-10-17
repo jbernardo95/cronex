@@ -28,15 +28,15 @@ defmodule Cronex.Scheduler do
 
         supervise(children, strategy: :one_for_one)
       end
-      
+
       @doc false
       def job_supervisor do
-        :"#{__MODULE__}.JobSupervisor" 
+        :"#{__MODULE__}.JobSupervisor"
       end
 
       @doc false
       def table do
-        :"#{__MODULE__}.Table" 
+        :"#{__MODULE__}.Table"
       end
     end
   end

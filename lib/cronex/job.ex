@@ -3,7 +3,7 @@ defmodule Cronex.Job do
   This module represents a job.
   """
 
-  import Cronex.Parser 
+  import Cronex.Parser
 
   defstruct frequency: nil,
             task: nil,
@@ -15,7 +15,7 @@ defmodule Cronex.Job do
   Check `Cronex.Every.every/3` documentation, to view the accepted `frequency` arguments.
   """
   def new(frequency, task)
-    when is_atom(frequency) and is_function(task) do
+      when is_atom(frequency) and is_function(task) do
     %Cronex.Job{}
     |> Map.put(:frequency, parse_regular_frequency(frequency))
     |> Map.put(:task, task)
@@ -33,14 +33,14 @@ defmodule Cronex.Job do
   Check `Cronex.Every.every/3` documentation, to view the accepted `frequency` and `time` arguments.
   """
   def new(arg1, arg2, task)
-    when is_atom(arg1) and is_bitstring(arg2) and is_function(task) do
+      when is_atom(arg1) and is_bitstring(arg2) and is_function(task) do
     %Cronex.Job{}
     |> Map.put(:frequency, parse_regular_frequency(arg1, arg2))
     |> Map.put(:task, task)
   end
 
   def new(arg1, arg2, task)
-    when is_integer(arg1) and is_atom(arg2) and is_function(task) do
+      when is_integer(arg1) and is_atom(arg2) and is_function(task) do
     %Cronex.Job{}
     |> Map.put(:frequency, parse_interval_frequency(arg1, arg2))
     |> Map.put(:task, task)
@@ -52,7 +52,7 @@ defmodule Cronex.Job do
   Check `Cronex.Every.every/4` documentation, to view the accepted `interval`, `frequency` and `time` arguments.
   """
   def new(interval, frequency, time, task)
-    when is_integer(interval) and is_atom(frequency) and is_function(task) do
+      when is_integer(interval) and is_atom(frequency) and is_function(task) do
     %Cronex.Job{}
     |> Map.put(:frequency, parse_interval_frequency(interval, frequency, time))
     |> Map.put(:task, task)
@@ -83,9 +83,10 @@ defmodule Cronex.Job do
   """
   def can_run?(%Cronex.Job{} = job) do
     # TODO Process.alive? only works for local processes, improve this to support several nodes
-    
-    is_time(job.frequency) and # Is time to run
-    (job.pid == nil or !Process.alive?(job.pid)) # Job process is dead or non existing 
+
+    # Is time to run
+    # Job process is dead or non existing 
+    is_time(job.frequency) and (job.pid == nil or !Process.alive?(job.pid))
   end
 
   defp raise_invalid_frequency_error do
@@ -106,66 +107,53 @@ defmodule Cronex.Job do
 
   # Every hour job, check minute of job
   defp is_time({minute, :*, :*, :*, :*})
-    when is_integer(minute) do
-
+       when is_integer(minute) do
     current_date_time().minute == minute
   end
 
   # Every interval hour job, check minute of job and interval hour
   defp is_time({minute, interval, :*, :*, :*})
-    when is_integer(minute) and is_function(interval) do
-
+       when is_integer(minute) and is_function(interval) do
     current_date_time().minute == minute and interval.(current_date_time().hour) == 0
   end
 
   # Every day job, check time of job
   defp is_time({minute, hour, :*, :*, :*})
-    when is_integer(minute) and is_integer(hour) do
-
+       when is_integer(minute) and is_integer(hour) do
     current_date_time().minute == minute and current_date_time().hour == hour
   end
 
   # Every interval day job, check time of job and interval day
   defp is_time({minute, hour, interval, :*, :*})
-    when is_integer(minute) and is_integer(hour) and is_function(interval) do
-
-    current_date_time().minute == minute and
-    current_date_time().hour == hour and
-    interval.(current_date_time().day - 1) == 0
+       when is_integer(minute) and is_integer(hour) and is_function(interval) do
+    current_date_time().minute == minute and current_date_time().hour == hour and
+      interval.(current_date_time().day - 1) == 0
   end
 
   # Every week job, check time and day of the week
   defp is_time({minute, hour, :*, :*, day_of_week}) do
-    current_date_time().minute == minute and
-    current_date_time().hour == hour and
-    Date.day_of_week(current_date_time()) == day_of_week
+    current_date_time().minute == minute and current_date_time().hour == hour and
+      Date.day_of_week(current_date_time()) == day_of_week
   end
 
   # Every month job, check time and day of job
   defp is_time({minute, hour, day, :*, :*})
-    when is_integer(minute) and is_integer(hour) and is_integer(day) do
-
-    current_date_time().minute == minute and
-    current_date_time().hour == hour and
-    current_date_time().day == day
+       when is_integer(minute) and is_integer(hour) and is_integer(day) do
+    current_date_time().minute == minute and current_date_time().hour == hour and
+      current_date_time().day == day
   end
 
   # Every interval month job, check time, day and interval month
   defp is_time({minute, hour, day, interval, :*})
-    when is_integer(minute) and is_integer(hour) and is_integer(day) and is_function(interval) do
-
-    current_date_time().minute == minute and
-    current_date_time().hour == hour and
-    current_date_time().day == day and
-    interval.(current_date_time().month - 1) == 0
+       when is_integer(minute) and is_integer(hour) and is_integer(day) and is_function(interval) do
+    current_date_time().minute == minute and current_date_time().hour == hour and
+      current_date_time().day == day and interval.(current_date_time().month - 1) == 0
   end
 
   # Every year job, check month, day and time of job
   defp is_time({minute, hour, day, month, :*}) do
-    current_date_time().minute == minute and 
-    current_date_time().hour == hour and
-    current_date_time().day == day and
-    current_date_time().month == month
+    current_date_time().minute == minute and current_date_time().hour == hour and
+      current_date_time().day == day and current_date_time().month == month
   end
 
   defp is_time(_frequency), do: false

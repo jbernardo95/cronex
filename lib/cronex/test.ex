@@ -32,8 +32,7 @@ defmodule Cronex.Test do
       assert_job_every :day, at: "10:00", in: MyApp.Scheduler, count: 3
   """
   defmacro assert_job_every(frequency, opts)
-    when is_atom(frequency) do
-
+           when is_atom(frequency) do
     time = Keyword.get(opts, :at, "00:00")
     scheduler = Keyword.get(opts, :in)
     count = Keyword.get(opts, :count, 1)
@@ -46,9 +45,9 @@ defmodule Cronex.Test do
   @doc false
   def find_jobs_by_frequency(table, frequency, time) do
     table
-    |> Table.get_jobs
-    |> Map.values
-    |> Enum.count(fn(%Job{frequency: job_frequency}) ->
+    |> Table.get_jobs()
+    |> Map.values()
+    |> Enum.count(fn %Job{frequency: job_frequency} ->
       job_frequency == Parser.parse_regular_frequency(frequency, time)
     end)
   end
@@ -72,23 +71,29 @@ defmodule Cronex.Test do
       assert_job_every 3, :day, at: "10:00", in: MyApp.Scheduler, count: 3
   """
   defmacro assert_job_every(interval, frequency, opts)
-    when is_integer(interval) and is_atom(frequency) do
-
+           when is_integer(interval) and is_atom(frequency) do
     time = Keyword.get(opts, :at, "00:00")
     scheduler = Keyword.get(opts, :in)
     count = Keyword.get(opts, :count, 1)
 
-    quote bind_quoted: [scheduler: scheduler, interval: interval, frequency: frequency, time: time, count: count] do
-      assert count == Cronex.Test.find_jobs_by_frequency(scheduler.table, interval, frequency, time)
+    quote bind_quoted: [
+            scheduler: scheduler,
+            interval: interval,
+            frequency: frequency,
+            time: time,
+            count: count
+          ] do
+      assert count ==
+               Cronex.Test.find_jobs_by_frequency(scheduler.table, interval, frequency, time)
     end
   end
 
   @doc false
   def find_jobs_by_frequency(table, interval, frequency, time) do
     table
-    |> Table.get_jobs
-    |> Map.values
-    |> Enum.count(fn(%Job{frequency: job_frequency}) ->
+    |> Table.get_jobs()
+    |> Map.values()
+    |> Enum.count(fn %Job{frequency: job_frequency} ->
       job_frequency == Parser.parse_interval_frequency(interval, frequency, time)
     end)
   end

@@ -31,14 +31,16 @@ defmodule Cronex.Table do
 
   # Callback functions
   def init(args) do
-    if is_nil(args[:scheduler]), do: raise_scheduler_not_provided_error() 
+    if is_nil(args[:scheduler]), do: raise_scheduler_not_provided_error()
 
     GenServer.cast(self(), :init)
 
-    state = %{scheduler: args[:scheduler],
-              jobs: Map.new,
-              timer: new_ping_timer(),
-              leader: false}
+    state = %{
+      scheduler: args[:scheduler],
+      jobs: Map.new(),
+      timer: new_ping_timer(),
+      leader: false
+    }
 
     {:ok, state}
   end
@@ -47,7 +49,7 @@ defmodule Cronex.Table do
     # Load jobs
     new_state =
       scheduler.jobs
-      |> Enum.reduce(state, fn(job, state) ->
+      |> Enum.reduce(state, fn job, state ->
         job = apply(scheduler, job, [])
         do_add_job(state, job)
       end)
@@ -72,6 +74,7 @@ defmodule Cronex.Table do
   end
 
   def handle_info(:ping, %{leader: false} = state), do: {:noreply, state}
+
   def handle_info(:ping, %{scheduler: scheduler} = state) do
     updated_timer = new_ping_timer()
 
@@ -92,27 +95,29 @@ defmodule Cronex.Table do
   end
 
   defp raise_scheduler_not_provided_error do
-    raise ArgumentError, message: """
-    No scheduler was provided when starting Cronex.Table.
+    raise ArgumentError,
+      message: """
+      No scheduler was provided when starting Cronex.Table.
 
-    Please provide a Scheduler like so:
+      Please provide a Scheduler like so:
 
-        Cronex.Table.start_link(scheduler: MyApp.Scheduler)
-    """
+          Cronex.Table.start_link(scheduler: MyApp.Scheduler)
+      """
   end
 
   defp try_become_leader(%{scheduler: scheduler} = state) do
-    trans_result = :global.trans(
-      {:leader, self()},
-      fn -> 
-        case GenServer.multi_call(Node.list, scheduler.table, :new_leader) do
-          {_, []} -> :ok
-          _ -> :aborted 
-        end
-      end,
-      Node.list([:this, :visible]),
-      0
-    )
+    trans_result =
+      :global.trans(
+        {:leader, self()},
+        fn ->
+          case GenServer.multi_call(Node.list(), scheduler.table, :new_leader) do
+            {_, []} -> :ok
+            _ -> :aborted
+          end
+        end,
+        Node.list([:this, :visible]),
+        0
+      )
 
     case trans_result do
       :ok -> Map.put(state, :leader, true)
@@ -121,7 +126,7 @@ defmodule Cronex.Table do
   end
 
   defp do_add_job(state, %Job{} = job) do
-    index = state[:jobs] |> Map.keys |> Enum.count 
+    index = state[:jobs] |> Map.keys() |> Enum.count()
     put_in(state, [:jobs, index], job)
   end
 
