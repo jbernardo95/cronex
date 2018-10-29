@@ -31,12 +31,14 @@ defmodule Cronex.Table do
 
   # Callback functions
   def init(args) do
-    if is_nil(args[:scheduler]), do: raise_scheduler_not_provided_error()
+    scheduler = args[:scheduler]
+
+    if is_nil(scheduler), do: raise_scheduler_not_provided_error()
 
     GenServer.cast(self(), :init)
 
     state = %{
-      scheduler: args[:scheduler],
+      scheduler: scheduler,
       jobs: Map.new(),
       timer: new_ping_timer(),
       leader: false
@@ -130,11 +132,7 @@ defmodule Cronex.Table do
     put_in(state, [:jobs, index], job)
   end
 
-  defp new_ping_timer() do
-    Process.send_after(self(), :ping, ping_interval())
-  end
+  defp new_ping_timer, do: Process.send_after(self(), :ping, ping_interval())
 
-  defp ping_interval do
-    Application.get_env(:cronex, :ping_interval, 30000)
-  end
+  defp ping_interval, do: Application.get_env(:cronex, :ping_interval, 30000)
 end

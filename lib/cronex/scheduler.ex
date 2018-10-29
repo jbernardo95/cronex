@@ -30,14 +30,10 @@ defmodule Cronex.Scheduler do
       end
 
       @doc false
-      def job_supervisor do
-        :"#{__MODULE__}.JobSupervisor"
-      end
+      def job_supervisor, do: :"#{__MODULE__}.JobSupervisor"
 
       @doc false
-      def table do
-        :"#{__MODULE__}.Table"
-      end
+      def table, do: :"#{__MODULE__}.Table"
     end
   end
 
