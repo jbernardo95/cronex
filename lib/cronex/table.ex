@@ -108,16 +108,18 @@ defmodule Cronex.Table do
   end
 
   defp try_become_leader(%{scheduler: scheduler} = state) do
+    node_list = Application.get_env(:cronex, :node_list, Node.list([:this, :visible]))
+
     trans_result =
       :global.trans(
         {:leader, self()},
         fn ->
-          case GenServer.multi_call(Node.list(), scheduler.table, :new_leader) do
+          case GenServer.multi_call(node_list -- [Node.self()], scheduler.table, :new_leader) do
             {_, []} -> :ok
             _ -> :aborted
           end
         end,
-        Node.list([:this, :visible]),
+        node_list,
         0
       )
 
