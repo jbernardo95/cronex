@@ -26,7 +26,7 @@ defmodule Cronex.Scheduler do
           worker(Cronex.Table, [[scheduler: __MODULE__], [name: table()]])
         ]
 
-        supervise(children, strategy: :one_for_one)
+        Supervisor.init(children, strategy: :one_for_one)
       end
 
       @doc false
