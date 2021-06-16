@@ -22,6 +22,9 @@ defmodule Cronex.Parser do
       iex> Cronex.Parser.parse_regular_frequency(:wednesday, "12:00")
       {0, 12, :*, :*, 3}
 
+      iex> Cronex.Parser.parse_regular_frequency([:friday, :saturday])
+      {0, 0, :*, :*, "5,6"}
+
       iex> Cronex.Parser.parse_regular_frequency(:non_existing_day)
       :invalid
 
@@ -56,6 +59,16 @@ defmodule Cronex.Parser do
         day_of_week = Enum.find_index(@days_of_week, &(&1 == frequency)) + 1
         {minute, hour, :*, :*, day_of_week}
 
+      is_list(frequency) and Enum.all?(frequency, &Enum.member?(@days_of_week, &1)) ->
+        days_of_week =
+          frequency
+          |> Enum.map(fn freq ->
+            Enum.find_index(@days_of_week, &(&1 == freq)) + 1
+          end)
+          |> Enum.join(",")
+
+        {minute, hour, :*, :*, days_of_week}
+
       true ->
         :invalid
     end
@@ -64,7 +77,7 @@ defmodule Cronex.Parser do
   @doc """
   Parses a given `interval`, `frequency` and `time` to a tuple.
 
-  `interval` is a function wich receives one argument and returns the remainder of the division of that argument by the given `interval` 
+  `interval` is a function wich receives one argument and returns the remainder of the division of that argument by the given `interval`
 
   ## Example
 
