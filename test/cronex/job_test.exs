@@ -44,6 +44,13 @@ defmodule Cronex.JobTest do
       assert job == Job.validate!(job)
     end
 
+    test "returns the given job if frequency contains a list of week days" do
+      task = fn -> :ok end
+      job = Job.new([:sunday, :monday], "12:00", task)
+
+      assert job == Job.validate!(job)
+    end
+
     test "raises invalid frequency error when a job with an invalid frequency is given" do
       task = fn -> :ok end
       job = Job.new(:invalid_frequency, task)
@@ -199,5 +206,24 @@ defmodule Cronex.JobTest do
 
     Test.DateTime.set(month: 1, day: 2, hour: 0, minute: 0)
     assert false == Cronex.Job.can_run?(job)
+  end
+
+  test "can_run?/1 with a list of week days job" do
+    task = fn -> :ok end
+    job = Job.new([:sunday, :monday], "12:00", task)
+
+    # day_of_week == 0 (or 7)
+    Test.DateTime.set(year: 2021, month: 6, day: 13, hour: 12, minute: 0)
+    assert true == Cronex.Job.can_run?(job)
+
+    # day_of_week == 1
+    Test.DateTime.set(year: 2021, month: 6, day: 14, hour: 12, minute: 0)
+    assert true == Cronex.Job.can_run?(job)
+
+    # days_of_week in 2..6
+    Enum.each(15..19, fn day ->
+      Test.DateTime.set(day: day, hour: 12, minute: 0)
+      assert false == Cronex.Job.can_run?(job)
+    end)
   end
 end

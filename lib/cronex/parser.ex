@@ -23,7 +23,7 @@ defmodule Cronex.Parser do
       {0, 12, :*, :*, 3}
 
       iex> Cronex.Parser.parse_regular_frequency([:friday, :saturday])
-      {0, 0, :*, :*, "5,6"}
+      {0, 0, :*, :*, [5,6]}
 
       iex> Cronex.Parser.parse_regular_frequency(:non_existing_day)
       :invalid
@@ -65,7 +65,6 @@ defmodule Cronex.Parser do
           |> Enum.map(fn freq ->
             Enum.find_index(@days_of_week, &(&1 == freq)) + 1
           end)
-          |> Enum.join(",")
 
         {minute, hour, :*, :*, days_of_week}
 

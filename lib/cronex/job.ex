@@ -46,6 +46,13 @@ defmodule Cronex.Job do
     |> Map.put(:task, task)
   end
 
+  def new(arg1, arg2, task)
+      when is_list(arg1) and is_bitstring(arg2) and is_function(task) do
+    %Cronex.Job{}
+    |> Map.put(:frequency, parse_regular_frequency(arg1, arg2))
+    |> Map.put(:task, task)
+  end
+
   @doc """
   Creates a `%Job{}` with the given interval, frequency, time and task.
 

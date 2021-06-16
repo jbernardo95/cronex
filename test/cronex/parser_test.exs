@@ -19,4 +19,14 @@ defmodule Cronex.ParserTest do
     assert 0 == interval_fn.(8)
     assert 2 == interval_fn.(2)
   end
+
+  test "parse_regular_frequency/2" do
+    assert {0, 0, :*, :*, day_frequency} = Cronex.Parser.parse_regular_frequency(:monday, "00:00")
+    assert 1 == day_frequency
+
+    assert {30, 10, :*, :*, days_frequency} =
+             Cronex.Parser.parse_regular_frequency([:friday, :saturday], "10:30")
+
+    assert [5, 6] == days_frequency
+  end
 end
