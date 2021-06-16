@@ -46,6 +46,13 @@ defmodule Cronex.Job do
     |> Map.put(:task, task)
   end
 
+  def new(arg1, arg2, task)
+      when is_list(arg1) and is_bitstring(arg2) and is_function(task) do
+    %Cronex.Job{}
+    |> Map.put(:frequency, parse_regular_frequency(arg1, arg2))
+    |> Map.put(:task, task)
+  end
+
   @doc """
   Creates a `%Job{}` with the given interval, frequency, time and task.
 
@@ -85,7 +92,7 @@ defmodule Cronex.Job do
     # TODO Process.alive? only works for local processes, improve this to support several nodes
 
     # Is time to run
-    # Job process is dead or non existing 
+    # Job process is dead or non existing
     is_time(job.frequency) and (job.pid == nil or !Process.alive?(job.pid))
   end
 
@@ -93,7 +100,7 @@ defmodule Cronex.Job do
     raise ArgumentError, """
     An invalid frequency was given when creating a job.
 
-    Check the docs to see the accepted frequency arguments. 
+    Check the docs to see the accepted frequency arguments.
     """
   end
 
@@ -128,6 +135,11 @@ defmodule Cronex.Job do
        when is_integer(minute) and is_integer(hour) and is_function(interval) do
     current_date_time().minute == minute and current_date_time().hour == hour and
       interval.(current_date_time().day - 1) == 0
+  end
+
+  # Every days of week job, check time and list of days of the week
+  defp is_time({minute, hour, :*, :*, days_of_week}) when is_list(days_of_week) do
+    Enum.any?(days_of_week, &is_time({minute, hour, :*, :*, &1}))
   end
 
   # Every week job, check time and day of the week

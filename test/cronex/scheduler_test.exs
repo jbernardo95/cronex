@@ -22,6 +22,10 @@ defmodule Cronex.SchedulerTest do
       send(test_process(), {:ok, :every_friday})
     end
 
+    every [:monday, :tuesday], at: "14:00" do
+      send(test_process(), {:ok, :every_monday_and_tuesday})
+    end
+
     every 2, :hour do
       send(test_process(), {:ok, :every_2_hour})
     end
@@ -46,7 +50,7 @@ defmodule Cronex.SchedulerTest do
 
   test "loads jobs from TestScheduler" do
     assert %{0 => %Job{}, 1 => %Job{}, 2 => %Job{}} = Cronex.Table.get_jobs(TestScheduler.table())
-    assert 5 == Cronex.Table.get_jobs(TestScheduler.table()) |> map_size
+    assert 6 == Cronex.Table.get_jobs(TestScheduler.table()) |> map_size
   end
 
   test "TestScheduler starts table and task supervisor" do
@@ -77,6 +81,22 @@ defmodule Cronex.SchedulerTest do
 
     Test.DateTime.set(hour: 13)
     refute_receive {:ok, :every_friday}, @timeout
+  end
+
+  test "every monday and tuesday job runs on the expected time" do
+    # day_of_week == 1
+    Test.DateTime.set(year: 2021, month: 6, day: 14, hour: 14, minute: 0)
+    assert_receive {:ok, :every_monday_and_tuesday}, @timeout
+
+    Test.DateTime.set(hour: 15)
+    refute_receive {:ok, :every_monday_and_tuesday}, @timeout
+
+    # day_of_week == 2
+    Test.DateTime.set(day: 15, hour: 14, minute: 0)
+    assert_receive {:ok, :every_monday_and_tuesday}, @timeout
+
+    Test.DateTime.set(hour: 15)
+    refute_receive {:ok, :every_monday_and_tuesday}, @timeout
   end
 
   test "every 2 hour job runs on the expected time" do
