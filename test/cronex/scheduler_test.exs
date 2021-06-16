@@ -92,10 +92,10 @@ defmodule Cronex.SchedulerTest do
     refute_receive {:ok, :every_monday_and_tuesday}, @timeout
 
     # day_of_week == 2
-    Test.DateTime.set(year: 2021, month: 6, day: 15, hour: 14, minute: 0)
+    Test.DateTime.set(day: 15, hour: 14, minute: 0)
     assert_receive {:ok, :every_monday_and_tuesday}, @timeout
 
-    Test.DateTime.set(hour: 16)
+    Test.DateTime.set(hour: 15)
     refute_receive {:ok, :every_monday_and_tuesday}, @timeout
   end
 

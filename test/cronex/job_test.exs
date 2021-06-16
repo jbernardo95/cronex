@@ -217,12 +217,12 @@ defmodule Cronex.JobTest do
     assert true == Cronex.Job.can_run?(job)
 
     # day_of_week == 1
-    Test.DateTime.set(year: 2021, month: 6, day: 14, hour: 12, minute: 0)
+    Test.DateTime.set(day: 14)
     assert true == Cronex.Job.can_run?(job)
 
     # days_of_week in 2..6
     Enum.each(15..19, fn day ->
-      Test.DateTime.set(day: day, hour: 12, minute: 0)
+      Test.DateTime.set(day: day)
       assert false == Cronex.Job.can_run?(job)
     end)
   end
